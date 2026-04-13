@@ -1,0 +1,81 @@
+name: forma
+publish_to: none
+
+environment:
+  sdk: '>=3.11.0 <4.0.0'
+
+dev_dependencies:
+  melos: ^7.5.1
+
+workspace:
+  - packages/forma_core
+  - packages/forma_theme_plantao_facil
+  - packages/_template
+  - storybook
+
+melos:
+  command:
+    bootstrap:
+      usePubspecOverrides: true
+
+    version:
+      updateGitTagRefs: true
+      workspaceChangelog: true
+
+  scripts:
+    analyze:
+      description: Analisa todos os pacotes
+      run: flutter analyze --fatal-infos
+      exec:
+        concurrency: 5
+
+    format:
+      description: Formata todos os pacotes (falha se há diff)
+      run: dart format . --set-exit-if-changed
+      exec:
+        concurrency: 5
+
+    test:
+      description: Roda testes em todos os pacotes que têm pasta test/
+      run: flutter test --coverage
+      exec:
+        concurrency: 3
+      packageFilters:
+        dirExists: test
+
+    test:core:
+      description: Roda testes apenas no forma_core
+      run: flutter test --coverage
+      exec:
+        concurrency: 1
+      packageFilters:
+        scope: forma_core
+
+    storybook:dev:
+      description: Roda o Storybook no Chrome
+      run: flutter run -d chrome
+      exec:
+        concurrency: 1
+      packageFilters:
+        scope: forma_storybook
+
+    storybook:build:
+      description: Build do Storybook para deploy web
+      run: flutter build web --release
+      exec:
+        concurrency: 1
+      packageFilters:
+        scope: forma_storybook
+
+    ci:
+      description: Roda format + analyze + test (usado no CI/CD)
+      steps:
+        - format
+        - analyze
+        - test
+
+    new:theme:
+      description: >
+        Scaffolda uma nova variante de tema.
+        Uso: melos run new:theme -- --name=artesier
+      run: dart scripts/new_theme.dart

@@ -1,0 +1,150 @@
+name: Release & Publish
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Version, Changelog & Publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap
+        run: melos bootstrap
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Version packages (Melos)
+        id: version
+        run: |
+          melos version --yes --no-git-tag-version --no-changelog
+
+          # Detect which packages changed version
+          CHANGED=$(git diff --name-only | grep pubspec.yaml | xargs -I {} dirname {} | tr '\n' ',')
+          echo "changed=$CHANGED" >> $GITHUB_OUTPUT
+
+          # Get new versions
+          CORE_VERSION=$(grep 'version:' packages/forma_core/pubspec.yaml | head -1 | awk '{print $2}')
+          THEME_VERSION=$(grep 'version:' packages/forma_theme_plantao_facil/pubspec.yaml | head -1 | awk '{print $2}')
+          echo "core_version=$CORE_VERSION" >> $GITHUB_OUTPUT
+          echo "theme_version=$THEME_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        run: |
+          # Generate per-package changelogs from conventional commits
+          melos version --yes --diff --no-git-tag-version
+
+          # Build release notes from git log since last tag
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            RANGE="HEAD"
+          else
+            RANGE="${LAST_TAG}..HEAD"
+          fi
+
+          echo "## Changes" > /tmp/release_notes.md
+          echo "" >> /tmp/release_notes.md
+
+          git log $RANGE --pretty=format:"- %s" --no-merges >> /tmp/release_notes.md
+
+          echo "" >> /tmp/release_notes.md
+          echo "" >> /tmp/release_notes.md
+          echo "### Packages" >> /tmp/release_notes.md
+          echo "- \`forma_core\`: v${{ steps.version.outputs.core_version }}" >> /tmp/release_notes.md
+          echo "- \`forma_theme_plantao_facil\`: v${{ steps.version.outputs.theme_version }}" >> /tmp/release_notes.md
+
+      - name: Commit version bump & changelog
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No version changes to commit"
+            exit 0
+          fi
+          git commit -m "chore(release): bump versions
+
+          forma_core: v${{ steps.version.outputs.core_version }}
+          forma_theme_plantao_facil: v${{ steps.version.outputs.theme_version }}"
+          git push
+
+      - name: Create Git tags
+        run: |
+          CORE_VERSION=${{ steps.version.outputs.core_version }}
+          THEME_VERSION=${{ steps.version.outputs.theme_version }}
+
+          # Tag forma_core if version changed
+          if ! git tag -l "forma_core-v${CORE_VERSION}" | grep -q .; then
+            git tag "forma_core-v${CORE_VERSION}"
+          fi
+
+          # Tag theme if version changed
+          if ! git tag -l "forma_theme_plantao_facil-v${THEME_VERSION}" | grep -q .; then
+            git tag "forma_theme_plantao_facil-v${THEME_VERSION}"
+          fi
+
+          git push --tags
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CORE_VERSION=${{ steps.version.outputs.core_version }}
+
+          gh release create "v${CORE_VERSION}" \
+            --title "v${CORE_VERSION}" \
+            --notes-file /tmp/release_notes.md
+
+      - name: Configure pub token
+        run: dart pub token add https://pub.rodolfodebonis.com.br --env-var PUB_TOKEN
+        env:
+          PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
+
+      - name: Publish forma_core
+        run: |
+          cd /tmp
+          cp -r $GITHUB_WORKSPACE/packages/forma_core forma_core_publish
+          cd forma_core_publish
+
+          # Remove workspace resolution for standalone publish
+          sed -i '/^resolution: workspace$/d' pubspec.yaml
+
+          dart pub publish --force
+
+          rm -rf /tmp/forma_core_publish
+
+      - name: Publish forma_theme_plantao_facil
+        run: |
+          cd /tmp
+          cp -r $GITHUB_WORKSPACE/packages/forma_theme_plantao_facil theme_publish
+          cd theme_publish
+
+          # Remove workspace resolution and point forma_core to hosted
+          sed -i '/^resolution: workspace$/d' pubspec.yaml
+          sed -i 's|  forma_core: ^.*|  forma_core:\n    hosted:\n      name: forma_core\n      url: https://pub.rodolfodebonis.com.br\n    version: ^${{ steps.version.outputs.core_version }}|' pubspec.yaml
+
+          dart pub publish --force
+
+          rm -rf /tmp/theme_publish

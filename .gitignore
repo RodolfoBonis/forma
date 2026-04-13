@@ -1,0 +1,30 @@
+# Melos
+pubspec_overrides.yaml
+.dart_tool/
+.packages
+
+# Flutter
+build/
+*.g.dart
+*.freezed.dart
+
+# Storybook build
+storybook/build/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Flutter plugins
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Misc
+.DS_Store
+*.log
+*.swp
+.metadata
+Forma design system prompt.md
