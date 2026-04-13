@@ -46,8 +46,10 @@ class _DurationsDemoState extends State<_DurationsDemo> {
           ),
           const SizedBox(height: 24),
           for (final (label, duration, display) in items) ...[
-            Text('$label ($display)',
-                style: const TextStyle(fontSize: 12, color: Colors.grey)),
+            Text(
+              '$label ($display)',
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
             const SizedBox(height: 8),
             AnimatedContainer(
               duration: duration,

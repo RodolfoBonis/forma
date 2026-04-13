@@ -49,12 +49,17 @@ WidgetbookComponent formaButtonComponent() {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 for (final variant in FormaButtonVariant.values) ...[
-                  Text(variant.name, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                  Text(
+                    variant.name,
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
                   const SizedBox(height: 4),
                   FormaButton(
                     label: 'Button ${variant.name}',
                     variant: variant,
-                    onPressed: variant == FormaButtonVariant.disabled ? null : () {},
+                    onPressed: variant == FormaButtonVariant.disabled
+                        ? null
+                        : () {},
                   ),
                   const SizedBox(height: 16),
                 ],

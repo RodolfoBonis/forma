@@ -11,12 +11,7 @@ import '../../tokens/forma_typography.dart';
 /// when no time is selected.
 class FormaTimePicker extends StatelessWidget {
   /// Creates a [FormaTimePicker].
-  const FormaTimePicker({
-    this.label,
-    this.value,
-    this.onChanged,
-    super.key,
-  });
+  const FormaTimePicker({this.label, this.value, this.onChanged, super.key});
 
   /// Overline label displayed above the field.
   final String? label;
@@ -33,9 +28,7 @@ class FormaTimePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
 
-    final displayText = value != null
-        ? value!.format(context)
-        : '--:--';
+    final displayText = value != null ? value!.format(context) : '--:--';
 
     final field = Semantics(
       button: true,
@@ -46,8 +39,9 @@ class FormaTimePicker extends StatelessWidget {
           constraints: const BoxConstraints(minHeight: _minHeight),
           padding: const EdgeInsets.symmetric(horizontal: FormaSpacing.base),
           decoration: BoxDecoration(
-            borderRadius:
-                const BorderRadius.all(Radius.circular(FormaRadius.input)),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(FormaRadius.input),
+            ),
             border: Border.all(color: ext.border, width: 0.5),
           ),
           alignment: Alignment.centerLeft,

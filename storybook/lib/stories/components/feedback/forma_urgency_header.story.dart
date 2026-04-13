@@ -21,10 +21,7 @@ WidgetbookComponent formaUrgencyHeaderComponent() {
 
           return Padding(
             padding: const EdgeInsets.all(24),
-            child: FormaUrgencyHeader(
-              title: title,
-              subtitle: subtitle,
-            ),
+            child: FormaUrgencyHeader(title: title, subtitle: subtitle),
           );
         },
       ),
@@ -36,16 +33,20 @@ WidgetbookComponent formaUrgencyHeaderComponent() {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text('With subtitle',
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                const Text(
+                  'With subtitle',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
                 const SizedBox(height: 4),
                 const FormaUrgencyHeader(
                   title: 'Solicitacao de troca recebida',
                   subtitle: 'Responda para confirmar o acordo.',
                 ),
                 const SizedBox(height: 24),
-                const Text('Title only',
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                const Text(
+                  'Title only',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
                 const SizedBox(height: 4),
                 const FormaUrgencyHeader(
                   title: 'Plantao precisa de cobertura urgente',

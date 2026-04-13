@@ -11,10 +11,7 @@ WidgetbookComponent formaPersonChipComponent() {
       WidgetbookUseCase(
         name: 'Playground',
         builder: (context) {
-          final name = context.knobs.string(
-            label: 'Name',
-            initialValue: 'Ana',
-          );
+          final name = context.knobs.string(label: 'Name', initialValue: 'Ana');
           final isActive = context.knobs.boolean(
             label: 'Active',
             initialValue: true,

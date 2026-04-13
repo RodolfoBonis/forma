@@ -29,9 +29,7 @@ WidgetbookComponent formaAppHeaderComponent() {
             title: title,
             variant: variant,
             onBack: () {},
-            trailing: showTrailing
-                ? const Icon(Icons.more_vert)
-                : null,
+            trailing: showTrailing ? const Icon(Icons.more_vert) : null,
           );
         },
       ),

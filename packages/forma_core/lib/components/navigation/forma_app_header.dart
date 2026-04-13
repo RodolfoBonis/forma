@@ -54,9 +54,7 @@ class FormaAppHeader extends StatelessWidget {
       height: 62,
       decoration: BoxDecoration(
         color: ext.cardBackground,
-        border: Border(
-          bottom: BorderSide(color: ext.border, width: 0.5),
-        ),
+        border: Border(bottom: BorderSide(color: ext.border, width: 0.5)),
       ),
       child: Stack(
         alignment: Alignment.center,
@@ -82,9 +80,7 @@ class FormaAppHeader extends StatelessWidget {
             Center(
               child: Text(
                 title!,
-                style: FormaTypography.title18.copyWith(
-                  color: ext.textPrimary,
-                ),
+                style: FormaTypography.title18.copyWith(color: ext.textPrimary),
               ),
             ),
 

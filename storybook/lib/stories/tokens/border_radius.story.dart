@@ -39,14 +39,18 @@ class _BorderRadiusScale extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (final (label, value) in items) ...[
-            Text(label,
-                style: const TextStyle(fontSize: 12, color: Colors.grey)),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
             const SizedBox(height: 4),
             Container(
               width: 120,
               height: 56,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.15),
                 border: Border.all(
                   color: Theme.of(context).colorScheme.primary,
                   width: 2,

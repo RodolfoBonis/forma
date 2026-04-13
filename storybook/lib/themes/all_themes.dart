@@ -4,8 +4,5 @@ import 'package:widgetbook/widgetbook.dart';
 
 /// All available theme configurations for the Widgetbook.
 final List<WidgetbookTheme<ThemeData>> allThemes = [
-  WidgetbookTheme(
-    name: 'Plantao Facil Light',
-    data: PlantaoFacilTheme.light,
-  ),
+  WidgetbookTheme(name: 'Plantao Facil Light', data: PlantaoFacilTheme.light),
 ];

@@ -53,8 +53,7 @@ class FormaAvatar extends StatelessWidget {
         height: size.diameter,
         decoration: BoxDecoration(
           color: color,
-          borderRadius:
-              BorderRadius.all(Radius.circular(size.borderRadius)),
+          borderRadius: BorderRadius.all(Radius.circular(size.borderRadius)),
         ),
         alignment: Alignment.center,
         child: Text(

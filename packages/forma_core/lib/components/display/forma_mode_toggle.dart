@@ -14,7 +14,10 @@ class FormaModeToggle extends StatelessWidget {
     required this.options,
     required this.selectedIndex,
     required this.onChanged,
-  }) : assert(options.length == 2, 'FormaModeToggle requires exactly 2 options');
+  }) : assert(
+         options.length == 2,
+         'FormaModeToggle requires exactly 2 options',
+       );
 
   /// The two option labels.
   final List<String> options;
@@ -56,14 +59,16 @@ class FormaModeToggle extends StatelessWidget {
                   ),
                   child: Text(
                     options[index],
-                    style: (isSelected
-                            ? FormaTypography.body14Medium
-                            : FormaTypography.body14)
-                        .copyWith(
-                      color: isSelected ? Colors.white : ext.textMuted,
-                      fontWeight:
-                          isSelected ? FontWeight.w700 : FontWeight.w400,
-                    ),
+                    style:
+                        (isSelected
+                                ? FormaTypography.body14Medium
+                                : FormaTypography.body14)
+                            .copyWith(
+                              color: isSelected ? Colors.white : ext.textMuted,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w400,
+                            ),
                   ),
                 ),
               ),

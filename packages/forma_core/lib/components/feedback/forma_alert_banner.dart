@@ -60,10 +60,7 @@ class FormaAlertBanner extends StatelessWidget {
         ),
         child: Row(
           children: [
-            if (icon != null) ...[
-              icon!,
-              const SizedBox(width: 12),
-            ],
+            if (icon != null) ...[icon!, const SizedBox(width: 12)],
             Expanded(
               child: Text(
                 message,
@@ -79,30 +76,30 @@ class FormaAlertBanner extends StatelessWidget {
   _AlertColors _resolveColors(FormaThemeExtension ext) {
     return switch (variant) {
       FormaAlertVariant.success => _AlertColors(
-          background: ext.successSurface,
-          border: ext.successColor.withValues(alpha: 0.5),
-          text: ext.successText,
-        ),
+        background: ext.successSurface,
+        border: ext.successColor.withValues(alpha: 0.5),
+        text: ext.successText,
+      ),
       FormaAlertVariant.warning => _AlertColors(
-          background: ext.warningSurface,
-          border: ext.warningColor.withValues(alpha: 0.5),
-          text: ext.warningText,
-        ),
+        background: ext.warningSurface,
+        border: ext.warningColor.withValues(alpha: 0.5),
+        text: ext.warningText,
+      ),
       FormaAlertVariant.error => _AlertColors(
-          background: ext.errorSurface,
-          border: ext.errorColor.withValues(alpha: 0.5),
-          text: ext.errorText,
-        ),
+        background: ext.errorSurface,
+        border: ext.errorColor.withValues(alpha: 0.5),
+        text: ext.errorText,
+      ),
       FormaAlertVariant.info => _AlertColors(
-          background: ext.infoSurface,
-          border: ext.infoText.withValues(alpha: 0.3),
-          text: ext.infoText,
-        ),
+        background: ext.infoSurface,
+        border: ext.infoText.withValues(alpha: 0.3),
+        text: ext.infoText,
+      ),
       FormaAlertVariant.urgency => _AlertColors(
-          background: ext.urgencySurface,
-          border: ext.warningColor.withValues(alpha: 0.5),
-          text: ext.warningText,
-        ),
+        background: ext.urgencySurface,
+        border: ext.warningColor.withValues(alpha: 0.5),
+        text: ext.warningText,
+      ),
     };
   }
 }

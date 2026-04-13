@@ -37,8 +37,10 @@ WidgetbookComponent formaTimePickerComponent() {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text('With label + value',
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                const Text(
+                  'With label + value',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
                 const SizedBox(height: 4),
                 FormaTimePicker(
                   label: 'Inicio',
@@ -46,16 +48,17 @@ WidgetbookComponent formaTimePickerComponent() {
                   onChanged: (_) {},
                 ),
                 const SizedBox(height: 24),
-                const Text('With label, no value (placeholder)',
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
-                const SizedBox(height: 4),
-                FormaTimePicker(
-                  label: 'Fim',
-                  onChanged: (_) {},
+                const Text(
+                  'With label, no value (placeholder)',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
                 ),
+                const SizedBox(height: 4),
+                FormaTimePicker(label: 'Fim', onChanged: (_) {}),
                 const SizedBox(height: 24),
-                const Text('No label',
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                const Text(
+                  'No label',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
                 const SizedBox(height: 4),
                 FormaTimePicker(
                   value: const TimeOfDay(hour: 20, minute: 0),

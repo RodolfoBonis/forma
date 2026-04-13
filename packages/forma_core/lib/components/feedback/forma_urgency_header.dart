@@ -10,11 +10,7 @@ import '../../tokens/forma_typography.dart';
 /// on an urgency-colored background to draw immediate attention.
 class FormaUrgencyHeader extends StatelessWidget {
   /// Creates a [FormaUrgencyHeader].
-  const FormaUrgencyHeader({
-    super.key,
-    required this.title,
-    this.subtitle,
-  });
+  const FormaUrgencyHeader({super.key, required this.title, this.subtitle});
 
   /// The main urgency message.
   final String title;
@@ -32,26 +28,20 @@ class FormaUrgencyHeader extends StatelessWidget {
         horizontal: FormaSpacing.base,
         vertical: FormaSpacing.md,
       ),
-      decoration: BoxDecoration(
-        color: ext.urgencySurface,
-      ),
+      decoration: BoxDecoration(color: ext.urgencySurface),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             title,
-            style: FormaTypography.title16.copyWith(
-              color: ext.textPrimary,
-            ),
+            style: FormaTypography.title16.copyWith(color: ext.textPrimary),
           ),
           if (subtitle != null) ...[
             const SizedBox(height: FormaSpacing.xs),
             Text(
               subtitle!,
-              style: FormaTypography.body14.copyWith(
-                color: ext.textMuted,
-              ),
+              style: FormaTypography.body14.copyWith(color: ext.textMuted),
             ),
           ],
         ],

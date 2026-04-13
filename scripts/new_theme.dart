@@ -13,8 +13,10 @@ void main(List<String> args) {
   }
 
   final slug = name.toLowerCase().replaceAll(' ', '_');
-  final pascal =
-      slug.split('_').map((w) => '${w[0].toUpperCase()}${w.substring(1)}').join();
+  final pascal = slug
+      .split('_')
+      .map((w) => '${w[0].toUpperCase()}${w.substring(1)}')
+      .join();
   final dir = 'packages/forma_theme_$slug';
   final templateDir = 'packages/_template';
 

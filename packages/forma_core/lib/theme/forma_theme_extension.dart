@@ -182,8 +182,11 @@ class FormaThemeExtension extends ThemeExtension<FormaThemeExtension> {
       primarySurface: Color.lerp(primarySurface, other.primarySurface, t)!,
       primaryBorder: Color.lerp(primaryBorder, other.primaryBorder, t)!,
       secondaryColor: Color.lerp(secondaryColor, other.secondaryColor, t)!,
-      secondarySurface:
-          Color.lerp(secondarySurface, other.secondarySurface, t)!,
+      secondarySurface: Color.lerp(
+        secondarySurface,
+        other.secondarySurface,
+        t,
+      )!,
       accentColor: Color.lerp(accentColor, other.accentColor, t)!,
       accentSurface: Color.lerp(accentSurface, other.accentSurface, t)!,
       textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,

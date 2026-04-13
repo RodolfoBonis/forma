@@ -76,7 +76,10 @@ class _ColorPaletteGrid extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        ),
         const SizedBox(height: 8),
         Wrap(spacing: 8, runSpacing: 8, children: swatches),
         const SizedBox(height: 24),

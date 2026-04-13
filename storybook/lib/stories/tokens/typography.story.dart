@@ -47,7 +47,10 @@ class _TypographyScale extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (final (label, style) in samples) ...[
-            Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 11, color: Colors.grey),
+            ),
             const SizedBox(height: 2),
             Text('The quick brown fox jumps over the lazy dog', style: style),
             const SizedBox(height: 16),

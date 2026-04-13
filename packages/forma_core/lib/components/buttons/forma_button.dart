@@ -190,31 +190,31 @@ class FormaButton extends StatelessWidget {
   _ButtonColors _resolveColors(FormaThemeExtension ext) {
     return switch (variant) {
       FormaButtonVariant.primary => _ButtonColors(
-          background: ext.primaryColor,
-          foreground: Colors.white,
-        ),
+        background: ext.primaryColor,
+        foreground: Colors.white,
+      ),
       FormaButtonVariant.secondary => _ButtonColors(
-          background: ext.cardBackground,
-          foreground: ext.textMuted,
-          borderColor: ext.border,
-        ),
+        background: ext.cardBackground,
+        foreground: ext.textMuted,
+        borderColor: ext.border,
+      ),
       FormaButtonVariant.danger => _ButtonColors(
-          background: ext.errorColor,
-          foreground: Colors.white,
-        ),
+        background: ext.errorColor,
+        foreground: Colors.white,
+      ),
       FormaButtonVariant.ghost => _ButtonColors(
-          background: ext.primarySurface,
-          foreground: ext.primaryColor,
-          borderColor: ext.primaryBorder,
-        ),
+        background: ext.primarySurface,
+        foreground: ext.primaryColor,
+        borderColor: ext.primaryBorder,
+      ),
       FormaButtonVariant.whatsApp => const _ButtonColors(
-          background: _whatsAppGreen,
-          foreground: Colors.white,
-        ),
+        background: _whatsAppGreen,
+        foreground: Colors.white,
+      ),
       FormaButtonVariant.disabled => _ButtonColors(
-          background: ext.border,
-          foreground: ext.textHint,
-        ),
+        background: ext.border,
+        foreground: ext.textHint,
+      ),
     };
   }
 }

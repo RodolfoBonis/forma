@@ -23,10 +23,7 @@ WidgetbookComponent formaLoadingComponent() {
             max: 6,
           );
 
-          return FormaLoading(
-            size: size,
-            strokeWidth: strokeWidth,
-          );
+          return FormaLoading(size: size, strokeWidth: strokeWidth);
         },
       ),
       WidgetbookUseCase(
@@ -45,8 +42,10 @@ WidgetbookComponent formaLoadingComponent() {
                       const SizedBox(height: 8),
                       Text(
                         '${size.toInt()}px',
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.grey),
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
                       ),
                     ],
                   ),

@@ -41,9 +41,10 @@ WidgetbookComponent formaStepIndicatorComponent() {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 for (int step = 1; step <= 4; step++) ...[
-                  Text('Passo $step de 4',
-                      style:
-                          const TextStyle(fontSize: 12, color: Colors.grey)),
+                  Text(
+                    'Passo $step de 4',
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
                   const SizedBox(height: 4),
                   FormaStepIndicator(currentStep: step, totalSteps: 4),
                   const SizedBox(height: 24),

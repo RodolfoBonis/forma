@@ -82,9 +82,7 @@ class FormaPushNotification extends StatelessWidget {
           const SizedBox(height: FormaSpacing.sm),
           Text(
             body,
-            style: FormaTypography.body13.copyWith(
-              color: ext.textPrimary,
-            ),
+            style: FormaTypography.body13.copyWith(color: ext.textPrimary),
           ),
         ],
       ),

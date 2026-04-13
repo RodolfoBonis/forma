@@ -11,10 +11,7 @@ import '../../tokens/forma_typography.dart';
 /// single message bubble.
 class FormaWhatsAppPreview extends StatelessWidget {
   /// Creates a [FormaWhatsAppPreview].
-  const FormaWhatsAppPreview({
-    super.key,
-    required this.message,
-  });
+  const FormaWhatsAppPreview({super.key, required this.message});
 
   /// The message text to display in the bubble.
   final String message;
@@ -46,9 +43,7 @@ class FormaWhatsAppPreview extends StatelessWidget {
             color: _whatsAppDark,
             child: Text(
               'WhatsApp',
-              style: FormaTypography.title16.copyWith(
-                color: Colors.white,
-              ),
+              style: FormaTypography.title16.copyWith(color: Colors.white),
             ),
           ),
           // Message bubble
@@ -65,9 +60,7 @@ class FormaWhatsAppPreview extends StatelessWidget {
                 ),
                 child: Text(
                   message,
-                  style: FormaTypography.body14.copyWith(
-                    color: Colors.black87,
-                  ),
+                  style: FormaTypography.body14.copyWith(color: Colors.black87),
                 ),
               ),
             ),

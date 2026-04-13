@@ -24,7 +24,10 @@ WidgetbookComponent formaBottomNavComponent() {
               onTap: (_) {},
               items: const [
                 FormaNavItem(label: 'Inicio', icon: Icons.home_outlined),
-                FormaNavItem(label: 'Agenda', icon: Icons.calendar_today_outlined),
+                FormaNavItem(
+                  label: 'Agenda',
+                  icon: Icons.calendar_today_outlined,
+                ),
                 FormaNavItem(label: 'Plantoes', icon: Icons.work_outline),
                 FormaNavItem(label: 'Perfil', icon: Icons.person_outline),
               ],

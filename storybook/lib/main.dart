@@ -47,11 +47,7 @@ class WidgetbookApp extends StatelessWidget {
           IosViewports.iPadPro11Inches,
           AndroidViewports.samsungGalaxyS20,
         ]),
-        TextScaleAddon(
-          min: 1.0,
-          max: 2.0,
-          divisions: 5,
-        ),
+        TextScaleAddon(min: 1.0, max: 2.0, divisions: 5),
         AlignmentAddon(),
       ],
       directories: [
@@ -70,17 +66,11 @@ class WidgetbookApp extends StatelessWidget {
           children: [
             WidgetbookFolder(
               name: 'Buttons',
-              children: [
-                formaButtonComponent(),
-                formaIconButtonComponent(),
-              ],
+              children: [formaButtonComponent(), formaIconButtonComponent()],
             ),
             WidgetbookFolder(
               name: 'Inputs',
-              children: [
-                formaTextFieldComponent(),
-                formaTimePickerComponent(),
-              ],
+              children: [formaTextFieldComponent(), formaTimePickerComponent()],
             ),
             WidgetbookFolder(
               name: 'Display',
@@ -96,10 +86,7 @@ class WidgetbookApp extends StatelessWidget {
             ),
             WidgetbookFolder(
               name: 'Navigation',
-              children: [
-                formaBottomNavComponent(),
-                formaAppHeaderComponent(),
-              ],
+              children: [formaBottomNavComponent(), formaAppHeaderComponent()],
             ),
             WidgetbookFolder(
               name: 'Feedback',

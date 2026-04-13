@@ -44,8 +44,7 @@ class FormaStepIndicator extends StatelessWidget {
                 child: Container(
                   height: 6,
                   decoration: BoxDecoration(
-                    color:
-                        isCompleted ? ext.primaryColor : ext.primarySurface,
+                    color: isCompleted ? ext.primaryColor : ext.primarySurface,
                     borderRadius: BorderRadius.circular(3),
                   ),
                 ),
@@ -55,9 +54,7 @@ class FormaStepIndicator extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             'Passo $currentStep de $totalSteps',
-            style: FormaTypography.caption12.copyWith(
-              color: ext.textMuted,
-            ),
+            style: FormaTypography.caption12.copyWith(color: ext.textMuted),
           ),
         ],
       ),

@@ -32,11 +32,7 @@ enum FormaBadgeVariant {
 /// drawn from [FormaThemeExtension] semantic colors.
 class FormaBadge extends StatelessWidget {
   /// Creates a [FormaBadge].
-  const FormaBadge({
-    required this.label,
-    required this.variant,
-    super.key,
-  });
+  const FormaBadge({required this.label, required this.variant, super.key});
 
   /// Text displayed inside the badge.
   final String label;
@@ -79,38 +75,36 @@ class FormaBadge extends StatelessWidget {
   _BadgeColors _resolveColors(FormaThemeExtension ext) {
     return switch (variant) {
       FormaBadgeVariant.confirmada => _BadgeColors(
-          background: ext.successSurface,
-          foreground: ext.successText,
-        ),
-      FormaBadgeVariant.pendente || FormaBadgeVariant.aguardando => _BadgeColors(
-          background: ext.warningSurface,
-          foreground: ext.warningText,
-        ),
+        background: ext.successSurface,
+        foreground: ext.successText,
+      ),
+      FormaBadgeVariant.pendente ||
+      FormaBadgeVariant.aguardando => _BadgeColors(
+        background: ext.warningSurface,
+        foreground: ext.warningText,
+      ),
       FormaBadgeVariant.cancelada => _BadgeColors(
-          background: ext.errorSurface,
-          foreground: ext.errorText,
-        ),
+        background: ext.errorSurface,
+        foreground: ext.errorText,
+      ),
       FormaBadgeVariant.oficial => _BadgeColors(
-          background: ext.secondarySurface,
-          foreground: ext.secondaryColor,
-        ),
+        background: ext.secondarySurface,
+        foreground: ext.secondaryColor,
+      ),
       FormaBadgeVariant.aoVivo => const _BadgeColors(
-          background: Color(0xFF1A1840),
-          foreground: Color(0xFFB5ABFF),
-        ),
+        background: Color(0xFF1A1840),
+        foreground: Color(0xFFB5ABFF),
+      ),
       FormaBadgeVariant.ativo => _BadgeColors(
-          background: ext.primarySurface,
-          foreground: ext.primaryColor,
-        ),
+        background: ext.primarySurface,
+        foreground: ext.primaryColor,
+      ),
     };
   }
 }
 
 class _BadgeColors {
-  const _BadgeColors({
-    required this.background,
-    required this.foreground,
-  });
+  const _BadgeColors({required this.background, required this.foreground});
 
   final Color background;
   final Color foreground;

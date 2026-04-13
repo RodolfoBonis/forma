@@ -53,8 +53,10 @@ WidgetbookComponent formaIconButtonComponent() {
                       const SizedBox(height: 4),
                       Text(
                         entry.key,
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.grey),
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
                       ),
                     ],
                   ),

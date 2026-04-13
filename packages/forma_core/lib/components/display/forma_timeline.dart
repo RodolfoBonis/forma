@@ -7,10 +7,7 @@ import '../../tokens/forma_typography.dart';
 /// A single step in a [FormaTimeline].
 class FormaTimelineStep {
   /// Creates a [FormaTimelineStep].
-  const FormaTimelineStep({
-    required this.label,
-    required this.timing,
-  });
+  const FormaTimelineStep({required this.label, required this.timing});
 
   /// Description of what happens at this step.
   final String label;
@@ -25,11 +22,7 @@ class FormaTimelineStep {
 /// timing labels aligned to the right.
 class FormaTimeline extends StatelessWidget {
   /// Creates a [FormaTimeline].
-  const FormaTimeline({
-    super.key,
-    required this.title,
-    required this.steps,
-  });
+  const FormaTimeline({super.key, required this.title, required this.steps});
 
   /// The title displayed above the step list.
   final String title;
@@ -54,9 +47,7 @@ class FormaTimeline extends StatelessWidget {
         children: [
           Text(
             title,
-            style: FormaTypography.title16.copyWith(
-              color: ext.textPrimary,
-            ),
+            style: FormaTypography.title16.copyWith(color: ext.textPrimary),
           ),
           const SizedBox(height: FormaSpacing.md),
           for (int i = 0; i < steps.length; i++) ...[
@@ -83,16 +74,12 @@ class FormaTimeline extends StatelessWidget {
         Expanded(
           child: Text(
             step.label,
-            style: FormaTypography.body14.copyWith(
-              color: ext.textPrimary,
-            ),
+            style: FormaTypography.body14.copyWith(color: ext.textPrimary),
           ),
         ),
         Text(
           step.timing,
-          style: FormaTypography.caption12.copyWith(
-            color: ext.textMuted,
-          ),
+          style: FormaTypography.caption12.copyWith(color: ext.textMuted),
           textAlign: TextAlign.right,
         ),
       ],

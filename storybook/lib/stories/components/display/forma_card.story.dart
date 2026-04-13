@@ -43,7 +43,10 @@ WidgetbookComponent formaCardComponent() {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 for (final variant in FormaCardVariant.values) ...[
-                  Text(variant.name, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                  Text(
+                    variant.name,
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
                   const SizedBox(height: 4),
                   FormaCard(
                     variant: variant,

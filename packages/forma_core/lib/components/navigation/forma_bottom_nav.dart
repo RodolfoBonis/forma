@@ -6,10 +6,7 @@ import '../../tokens/forma_typography.dart';
 /// A single navigation item for [FormaBottomNav].
 class FormaNavItem {
   /// Creates a navigation item with the given [label] and [icon].
-  const FormaNavItem({
-    required this.label,
-    required this.icon,
-  });
+  const FormaNavItem({required this.label, required this.icon});
 
   /// Display label shown below the icon.
   final String label;
@@ -48,9 +45,7 @@ class FormaBottomNav extends StatelessWidget {
       height: 74,
       decoration: BoxDecoration(
         color: ext.cardBackground,
-        border: Border(
-          top: BorderSide(color: ext.border, width: 0.5),
-        ),
+        border: Border(top: BorderSide(color: ext.border, width: 0.5)),
       ),
       child: Row(
         children: List.generate(items.length, (index) {
@@ -86,12 +81,15 @@ class FormaBottomNav extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       item.label,
-                      style: (isActive
-                              ? FormaTypography.nav10Bold
-                              : FormaTypography.nav10)
-                          .copyWith(
-                        color: isActive ? ext.primaryColor : ext.textMuted,
-                      ),
+                      style:
+                          (isActive
+                                  ? FormaTypography.nav10Bold
+                                  : FormaTypography.nav10)
+                              .copyWith(
+                                color: isActive
+                                    ? ext.primaryColor
+                                    : ext.textMuted,
+                              ),
                     ),
                   ],
                 ),
