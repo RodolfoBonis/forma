@@ -41,8 +41,7 @@ WidgetbookComponent formaCardComponent() {
               selected: selected,
               accentColor: PfColors.primary700,
               selectedColor: PfColors.primary700,
-              backgroundColor:
-                  useCustomBg ? PfColors.primary50 : null,
+              backgroundColor: useCustomBg ? PfColors.primary50 : null,
               width: width > 0 ? width : null,
               height: height > 0 ? height : null,
               child: const Text('Card content goes here'),
