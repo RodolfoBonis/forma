@@ -30,6 +30,7 @@ class _BorderRadiusScale extends StatelessWidget {
       ('large (22)', FormaRadius.large),
       ('chip (24)', FormaRadius.chip),
       ('sheet (28)', FormaRadius.sheet),
+      ('xLarge (40)', FormaRadius.xlarge),
       ('appIcon (54)', FormaRadius.appIcon),
     ];
 

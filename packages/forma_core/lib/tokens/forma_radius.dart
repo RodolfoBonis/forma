@@ -29,6 +29,9 @@ abstract class FormaRadius {
   /// 28px — bottom-sheet rounding.
   static const double sheet = 28;
 
+  /// 40px - extra large generic rounding
+  static const double xlarge = 40;
+
   /// 54px — app icon rounding.
   static const double appIcon = 54;
 }
