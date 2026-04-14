@@ -21,6 +21,18 @@ WidgetbookComponent formaCardComponent() {
             label: 'Selected (shift only)',
             initialValue: false,
           );
+          final useCustomBg = context.knobs.boolean(
+            label: 'Custom background',
+            initialValue: false,
+          );
+          final width = context.knobs.double.input(
+            label: 'Width',
+            initialValue: 0,
+          );
+          final height = context.knobs.double.input(
+            label: 'Height',
+            initialValue: 0,
+          );
 
           return Padding(
             padding: const EdgeInsets.all(24),
@@ -29,6 +41,9 @@ WidgetbookComponent formaCardComponent() {
               selected: selected,
               accentColor: PfColors.primary700,
               selectedColor: PfColors.primary700,
+              backgroundColor: useCustomBg ? PfColors.primary50 : null,
+              width: width > 0 ? width : null,
+              height: height > 0 ? height : null,
               child: const Text('Card content goes here'),
             ),
           );

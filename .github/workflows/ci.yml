@@ -11,6 +11,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  version-check:
+    name: Version Bump Check
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check version was bumped
+        run: |
+          CORE_VERSION=$(grep '^version:' packages/forma_core/pubspec.yaml | awk '{print $2}')
+          if git ls-remote --tags origin "refs/tags/v${CORE_VERSION}" | grep -q .; then
+            echo "::error::Version ${CORE_VERSION} already released (tag v${CORE_VERSION} exists). Bump the version in pubspec.yaml files."
+            exit 1
+          fi
+          echo "Version ${CORE_VERSION} not yet released. OK to merge."
+
   ci:
     name: Format, Analyze & Test
     runs-on: ubuntu-latest

@@ -31,7 +31,10 @@ class FormaCard extends StatelessWidget {
     this.accentColor,
     this.selected = false,
     this.selectedColor,
+    this.backgroundColor,
     this.padding,
+    this.width,
+    this.height,
     super.key,
   });
 
@@ -51,8 +54,17 @@ class FormaCard extends StatelessWidget {
   /// [FormaCardVariant.shift]).
   final Color? selectedColor;
 
+  /// Custom background color. When null, uses variant-specific defaults.
+  final Color? backgroundColor;
+
   /// Custom padding. When null, uses variant-specific defaults.
   final EdgeInsetsGeometry? padding;
+
+  /// Fixed width for the card. When null, the card sizes to its parent.
+  final double? width;
+
+  /// Fixed height for the card. When null, the card sizes to its content.
+  final double? height;
 
   static const Color _heroDarkBg = Color(0xFF0F0F0F);
   static const double _swapAccentWidth = 5;
@@ -71,6 +83,8 @@ class FormaCard extends StatelessWidget {
 
   Widget _buildBasic(FormaThemeExtension ext) {
     return Container(
+      width: width,
+      height: height,
       padding:
           padding ??
           const EdgeInsets.symmetric(
@@ -78,7 +92,7 @@ class FormaCard extends StatelessWidget {
             vertical: FormaSpacing.lg,
           ),
       decoration: BoxDecoration(
-        color: ext.cardBackground,
+        color: backgroundColor ?? ext.cardBackground,
         borderRadius: const BorderRadius.all(
           Radius.circular(FormaRadius.cardLg),
         ),
@@ -90,15 +104,19 @@ class FormaCard extends StatelessWidget {
 
   Widget _buildHeroDark() {
     return Container(
+      width: width,
+      height: height,
       padding:
           padding ??
           const EdgeInsets.symmetric(
             horizontal: FormaSpacing.base,
             vertical: FormaSpacing.lg,
           ),
-      decoration: const BoxDecoration(
-        color: _heroDarkBg,
-        borderRadius: BorderRadius.all(Radius.circular(FormaRadius.cardLg)),
+      decoration: BoxDecoration(
+        color: backgroundColor ?? _heroDarkBg,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(FormaRadius.cardLg),
+        ),
       ),
       child: child,
     );
@@ -106,9 +124,11 @@ class FormaCard extends StatelessWidget {
 
   Widget _buildSwap(FormaThemeExtension ext) {
     return Container(
+      width: width,
+      height: height,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: ext.cardBackground,
+        color: backgroundColor ?? ext.cardBackground,
         borderRadius: const BorderRadius.all(
           Radius.circular(FormaRadius.button),
         ),
@@ -143,6 +163,8 @@ class FormaCard extends StatelessWidget {
     final borderWidth = selected ? 2.0 : 0.5;
 
     return Container(
+      width: width,
+      height: height,
       padding:
           padding ??
           const EdgeInsets.symmetric(
@@ -150,7 +172,7 @@ class FormaCard extends StatelessWidget {
             vertical: FormaSpacing.lg,
           ),
       decoration: BoxDecoration(
-        color: ext.cardBackground,
+        color: backgroundColor ?? ext.cardBackground,
         borderRadius: const BorderRadius.all(Radius.circular(FormaRadius.card)),
         border: Border.all(color: borderColor, width: borderWidth),
       ),

@@ -103,6 +103,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Fail if version not bumped
+        if: steps.check.outputs.exists == 'true'
+        run: |
+          CORE_VERSION=${{ steps.version.outputs.core_version }}
+          echo "::error::Release v${CORE_VERSION} already exists. Bump the version in pubspec.yaml before merging to main."
+          exit 1
+
       - name: Create Git tag & GitHub Release
         if: steps.check.outputs.exists == 'false'
         run: |
