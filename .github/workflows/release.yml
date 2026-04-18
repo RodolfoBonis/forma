@@ -14,6 +14,7 @@ concurrency:
 jobs:
   ci:
     name: CI Check
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -58,72 +59,93 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Read current versions
+      - name: Compute next version from conventional commits
         id: version
         run: |
-          CORE_VERSION=$(grep '^version:' packages/forma_core/pubspec.yaml | awk '{print $2}')
-          THEME_VERSION=$(grep '^version:' packages/forma_theme_plantao_facil/pubspec.yaml | awk '{print $2}')
-          echo "core_version=$CORE_VERSION" >> $GITHUB_OUTPUT
-          echo "theme_version=$THEME_VERSION" >> $GITHUB_OUTPUT
+          set -euo pipefail
+
+          LAST_TAG=$(git tag -l 'v*' --sort=-v:refname | head -n 1 || true)
+          if [ -z "$LAST_TAG" ]; then
+            LAST_VERSION="0.0.0"
+            RANGE="HEAD"
+          else
+            LAST_VERSION="${LAST_TAG#v}"
+            RANGE="${LAST_TAG}..HEAD"
+          fi
+          echo "Last tag: ${LAST_TAG:-<none>} (version ${LAST_VERSION})"
+
+          COMMITS=$(git log "$RANGE" --pretty=format:'%s%n%b%n---' --no-merges || true)
+
+          BUMP="patch"
+          if echo "$COMMITS" | grep -qiE '(^|\s)BREAKING[-_ ]CHANGE:' \
+             || echo "$COMMITS" | grep -qE '^[a-zA-Z]+(\([^)]+\))?!:'; then
+            BUMP="major"
+          elif echo "$COMMITS" | grep -qE '^feat(\([^)]+\))?:'; then
+            BUMP="minor"
+          fi
+          echo "Detected bump: $BUMP"
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$LAST_VERSION"
+          case "$BUMP" in
+            major) NEW_VERSION="$((MAJOR+1)).0.0" ;;
+            minor) NEW_VERSION="${MAJOR}.$((MINOR+1)).0" ;;
+            patch) NEW_VERSION="${MAJOR}.${MINOR}.$((PATCH+1))" ;;
+          esac
+          echo "New version: $NEW_VERSION"
+
+          echo "last_version=$LAST_VERSION" >> $GITHUB_OUTPUT
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "bump=$BUMP" >> $GITHUB_OUTPUT
+          echo "range=$RANGE" >> $GITHUB_OUTPUT
+
+      - name: Bump pubspec versions
+        run: |
+          NEW_VERSION=${{ steps.version.outputs.new_version }}
+          for f in packages/forma_core/pubspec.yaml packages/forma_theme_plantao_facil/pubspec.yaml; do
+            sed -i -E "s/^version: .*/version: ${NEW_VERSION}/" "$f"
+          done
+          git diff --stat
+
+      - name: Commit version bump
+        run: |
+          NEW_VERSION=${{ steps.version.outputs.new_version }}
+          if git diff --quiet; then
+            echo "No version change detected; skipping bump commit."
+          else
+            git add packages/forma_core/pubspec.yaml packages/forma_theme_plantao_facil/pubspec.yaml
+            git commit -m "chore(release): v${NEW_VERSION} [skip ci]"
+            git push origin HEAD:main
+          fi
 
       - name: Generate release notes
         run: |
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          if [ -z "$LAST_TAG" ]; then
-            RANGE="HEAD"
-          else
-            RANGE="${LAST_TAG}..HEAD"
-          fi
-
-          CORE_VERSION=${{ steps.version.outputs.core_version }}
-          THEME_VERSION=${{ steps.version.outputs.theme_version }}
+          NEW_VERSION=${{ steps.version.outputs.new_version }}
+          RANGE="${{ steps.version.outputs.range }}"
 
           cat > /tmp/release_notes.md << NOTES
           ## Packages
 
           | Package | Version |
           |---------|---------|
-          | \`forma_core\` | v${CORE_VERSION} |
-          | \`forma_theme_plantao_facil\` | v${THEME_VERSION} |
+          | \`forma_core\` | v${NEW_VERSION} |
+          | \`forma_theme_plantao_facil\` | v${NEW_VERSION} |
 
           ## Changes
           NOTES
 
           git log $RANGE --pretty=format:"- %s" --no-merges >> /tmp/release_notes.md
 
-      - name: Check if release exists
-        id: check
-        run: |
-          CORE_VERSION=${{ steps.version.outputs.core_version }}
-          if gh release view "v${CORE_VERSION}" --repo ${{ github.repository }} > /dev/null 2>&1; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Fail if version not bumped
-        if: steps.check.outputs.exists == 'true'
-        run: |
-          CORE_VERSION=${{ steps.version.outputs.core_version }}
-          echo "::error::Release v${CORE_VERSION} already exists. Bump the version in pubspec.yaml before merging to main."
-          exit 1
-
       - name: Create Git tag & GitHub Release
-        if: steps.check.outputs.exists == 'false'
         run: |
-          CORE_VERSION=${{ steps.version.outputs.core_version }}
-          THEME_VERSION=${{ steps.version.outputs.theme_version }}
+          NEW_VERSION=${{ steps.version.outputs.new_version }}
 
-          # Create package-level tags
-          git tag "forma_core-v${CORE_VERSION}" 2>/dev/null || true
-          git tag "forma_theme_plantao_facil-v${THEME_VERSION}" 2>/dev/null || true
-          git tag "v${CORE_VERSION}" 2>/dev/null || true
+          git tag "forma_core-v${NEW_VERSION}"
+          git tag "forma_theme_plantao_facil-v${NEW_VERSION}"
+          git tag "v${NEW_VERSION}"
           git push --tags
 
-          gh release create "v${CORE_VERSION}" \
-            --title "v${CORE_VERSION}" \
+          gh release create "v${NEW_VERSION}" \
+            --title "v${NEW_VERSION}" \
             --notes-file /tmp/release_notes.md
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -134,7 +156,6 @@ jobs:
           PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
 
       - name: Publish forma_core
-        if: steps.check.outputs.exists == 'false'
         env:
           PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
         run: |
@@ -145,11 +166,10 @@ jobs:
           rm -rf /tmp/forma_core_publish
 
       - name: Publish forma_theme_plantao_facil
-        if: steps.check.outputs.exists == 'false'
         env:
           PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
+          NEW_VERSION: ${{ steps.version.outputs.new_version }}
         run: |
-          CORE_VERSION=${{ steps.version.outputs.core_version }}
           cp -r packages/forma_theme_plantao_facil /tmp/theme_publish
           cd /tmp/theme_publish
 
@@ -158,12 +178,13 @@ jobs:
 
           # Point forma_core to hosted private pub
           python3 -c "
-          import re
+          import os, re
+          version = os.environ['NEW_VERSION']
           with open('pubspec.yaml', 'r') as f:
               content = f.read()
           content = re.sub(
               r'  forma_core: \^.*',
-              '  forma_core:\\n    hosted:\\n      name: forma_core\\n      url: https://pub.rodolfodebonis.com.br\\n    version: ^${CORE_VERSION}',
+              f'  forma_core:\n    hosted:\n      name: forma_core\n      url: https://pub.rodolfodebonis.com.br\n    version: ^{version}',
               content
           )
           with open('pubspec.yaml', 'w') as f:

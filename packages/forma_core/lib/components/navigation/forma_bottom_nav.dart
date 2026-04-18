@@ -6,13 +6,26 @@ import '../../tokens/forma_typography.dart';
 /// A single navigation item for [FormaBottomNav].
 class FormaNavItem {
   /// Creates a navigation item with the given [label] and [icon].
-  const FormaNavItem({required this.label, required this.icon});
+  ///
+  /// Use [iconWidget] to provide a custom widget (e.g. avatar) instead of
+  /// the default [Icon]. When [iconWidget] is set, [icon] is ignored.
+  const FormaNavItem({
+    required this.label,
+    required this.icon,
+    this.iconWidget,
+  });
 
   /// Display label shown below the icon.
   final String label;
 
   /// Icon displayed for this navigation item.
   final IconData icon;
+
+  /// Optional custom widget to display instead of the default [Icon].
+  ///
+  /// When provided, [icon] is used only as a fallback. The widget receives
+  /// no color tinting — the caller is responsible for active/inactive styling.
+  final Widget Function(bool isActive)? iconWidget;
 }
 
 /// A bottom navigation bar following Forma Design System specs.
@@ -73,11 +86,14 @@ class FormaBottomNav extends StatelessWidget {
                         borderRadius: BorderRadius.circular(3),
                       ),
                     ),
-                    Icon(
-                      item.icon,
-                      color: isActive ? ext.primaryColor : ext.textMuted,
-                      size: 24,
-                    ),
+                    if (item.iconWidget != null)
+                      item.iconWidget!(isActive)
+                    else
+                      Icon(
+                        item.icon,
+                        color: isActive ? ext.primaryColor : ext.textMuted,
+                        size: 24,
+                      ),
                     const SizedBox(height: 4),
                     Text(
                       item.label,
