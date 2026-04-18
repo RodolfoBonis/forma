@@ -55,11 +55,7 @@ class _FormaShimmerState extends State<FormaShimmer>
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: [baseColor, highlightColor, baseColor],
-              stops: [
-                start.clamp(0.0, 1.0),
-                value,
-                end.clamp(0.0, 1.0),
-              ],
+              stops: [start.clamp(0.0, 1.0), value, end.clamp(0.0, 1.0)],
             ).createShader(bounds);
           },
           blendMode: BlendMode.srcATop,

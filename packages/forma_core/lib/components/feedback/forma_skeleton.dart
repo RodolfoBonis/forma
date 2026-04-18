@@ -19,17 +19,11 @@ class FormaSkeleton extends StatelessWidget {
   });
 
   /// A circular skeleton, typically used as an avatar placeholder.
-  const factory FormaSkeleton.circle({
-    Key? key,
-    double size,
-  }) = _CircleSkeleton;
+  const factory FormaSkeleton.circle({Key? key, double size}) = _CircleSkeleton;
 
   /// A rounded rectangle skeleton, typically used as a text line placeholder.
-  const factory FormaSkeleton.line({
-    Key? key,
-    double? width,
-    double height,
-  }) = _LineSkeleton;
+  const factory FormaSkeleton.line({Key? key, double? width, double height}) =
+      _LineSkeleton;
 
   /// A rounded rectangle skeleton, typically used as a card placeholder.
   const factory FormaSkeleton.box({
@@ -61,10 +55,8 @@ class FormaSkeleton extends StatelessWidget {
 }
 
 class _CircleSkeleton extends FormaSkeleton {
-  const _CircleSkeleton({
-    super.key,
-    this.size = 40,
-  }) : super._(width: size, height: size, borderRadius: size / 2);
+  const _CircleSkeleton({super.key, this.size = 40})
+    : super._(width: size, height: size, borderRadius: size / 2);
 
   final double size;
 }
@@ -83,9 +75,5 @@ class _BoxSkeleton extends FormaSkeleton {
     double? width,
     double? height,
     double borderRadius = 12,
-  }) : super._(
-          width: width,
-          height: height ?? 80,
-          borderRadius: borderRadius,
-        );
+  }) : super._(width: width, height: height ?? 80, borderRadius: borderRadius);
 }
