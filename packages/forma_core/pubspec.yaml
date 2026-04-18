@@ -2,7 +2,7 @@ name: forma_core
 description: >
   Forma Design System — shared Flutter components, tokens, and theme architecture
   for multi-app consistency.
-version: 1.2.0
+version: 1.3.0
 publish_to: https://pub.rodolfodebonis.com.br
 resolution: workspace
 
