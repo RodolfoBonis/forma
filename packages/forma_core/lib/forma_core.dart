@@ -40,6 +40,8 @@ export 'components/navigation/forma_app_header.dart';
 // Components — Feedback
 export 'components/feedback/forma_alert_banner.dart';
 export 'components/feedback/forma_loading.dart';
+export 'components/feedback/forma_shimmer.dart';
+export 'components/feedback/forma_skeleton.dart';
 export 'components/feedback/forma_push_notification.dart';
 export 'components/feedback/forma_urgency_header.dart';
 

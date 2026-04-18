@@ -18,7 +18,7 @@ enum FormaHeaderVariant {
 /// An application header bar following Forma Design System specs.
 ///
 /// Supports a back-button variant, title-only, or a fully custom leading widget.
-class FormaAppHeader extends StatelessWidget {
+class FormaAppHeader extends StatelessWidget implements PreferredSizeWidget {
   /// Creates a [FormaAppHeader].
   const FormaAppHeader({
     super.key,
@@ -46,12 +46,19 @@ class FormaAppHeader extends StatelessWidget {
   /// Optional trailing widget displayed on the right side.
   final Widget? trailing;
 
+  static const double _kHeaderHeight = 62;
+
+  @override
+  Size get preferredSize => const Size.fromHeight(_kHeaderHeight);
+
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final topPadding = MediaQuery.of(context).padding.top;
 
     return Container(
-      height: 62,
+      height: _kHeaderHeight + topPadding,
+      padding: EdgeInsets.only(top: topPadding),
       decoration: BoxDecoration(
         color: ext.cardBackground,
         border: Border(bottom: BorderSide(color: ext.border, width: 0.5)),

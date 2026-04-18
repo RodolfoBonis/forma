@@ -23,6 +23,7 @@ class FormaTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
     this.maxLines = 1,
+    this.textCapitalization = TextCapitalization.none,
     super.key,
   });
 
@@ -55,6 +56,9 @@ class FormaTextField extends StatelessWidget {
 
   /// Maximum number of visible lines.
   final int? maxLines;
+
+  /// Text capitalization behavior.
+  final TextCapitalization textCapitalization;
 
   static const double _minHeight = 56;
 
@@ -91,6 +95,7 @@ class FormaTextField extends StatelessWidget {
       obscureText: obscureText,
       maxLines: maxLines,
       enabled: enabled,
+      textCapitalization: textCapitalization,
     );
 
     if (label == null) return field;
