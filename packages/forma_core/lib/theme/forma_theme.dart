@@ -23,7 +23,15 @@ class FormaTheme {
       seedColor: seedColor,
       brightness: brightness,
     );
-    final textTheme = GoogleFonts.getTextTheme(fontFamily);
+
+    // Fall back to the default text theme when the Google font can't be
+    // resolved (e.g. offline, or in tests with runtime fetching disabled).
+    TextTheme? textTheme;
+    try {
+      textTheme = GoogleFonts.getTextTheme(fontFamily);
+    } on Exception {
+      textTheme = null;
+    }
 
     return ThemeData(
       useMaterial3: true,

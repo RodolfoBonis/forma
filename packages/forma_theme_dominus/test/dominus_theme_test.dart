@@ -5,31 +5,50 @@ import 'package:forma_theme_dominus/forma_theme_dominus.dart';
 
 void main() {
   group('DominusTheme.dark', () {
-    final theme = DominusTheme.dark;
+    testWidgets('is a dark Material 3 theme', (tester) async {
+      late ThemeData theme;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: DominusTheme.dark,
+          home: Builder(
+            builder: (context) {
+              theme = Theme.of(context);
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
 
-    test('is a dark Material 3 theme', () {
       expect(theme.brightness, Brightness.dark);
       expect(theme.useMaterial3, isTrue);
+      expect(theme.scaffoldBackgroundColor, DominusColors.bgCanvas);
     });
 
-    test('registers a FormaThemeExtension with Dominus colors', () {
-      final ext = theme.extension<FormaThemeExtension>();
-      expect(ext, isNotNull);
-      expect(ext!.primaryColor, DominusColors.brandPrimary);
+    testWidgets('registers a FormaThemeExtension with Dominus colors', (
+      tester,
+    ) async {
+      late FormaThemeExtension ext;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: DominusTheme.dark,
+          home: Builder(
+            builder: (context) {
+              ext = Theme.of(context).extension<FormaThemeExtension>()!;
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+
+      // Base slots.
+      expect(ext.primaryColor, DominusColors.brandPrimary);
       expect(ext.appBackground, DominusColors.bgCanvas);
       expect(ext.cardBackground, DominusColors.bgSurface);
-    });
-
-    test('populates the extended brand-state slots', () {
-      final ext = theme.extension<FormaThemeExtension>()!;
+      // Extended brand-state slots.
       expect(ext.primaryHover, DominusColors.brandPrimaryHover);
       expect(ext.primaryPress, DominusColors.brandPrimaryPress);
       expect(ext.onPrimary, DominusColors.textOnPrimary);
       expect(ext.surfaceElevated, DominusColors.bgSurfaceElevated);
-    });
-
-    test('uses the brand color as the scaffold seed/background', () {
-      expect(theme.scaffoldBackgroundColor, DominusColors.bgCanvas);
     });
   });
 }
