@@ -10,6 +10,7 @@ dev_dependencies:
 workspace:
   - packages/forma_core
   - packages/forma_theme_plantao_facil
+  - packages/forma_theme_dominus
   - packages/_template
   - storybook
 
