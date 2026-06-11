@@ -38,11 +38,7 @@ melos:
 
     test:
       description: Roda testes em todos os pacotes que têm pasta test/
-      run: flutter test --coverage
-      exec:
-        concurrency: 3
-      packageFilters:
-        dirExists: test
+      run: melos exec -c 3 --dir-exists="test" -- flutter test --coverage
 
     test:core:
       description: Roda testes apenas no forma_core
