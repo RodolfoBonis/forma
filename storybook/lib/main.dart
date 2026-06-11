@@ -11,6 +11,8 @@ import 'stories/components/buttons/forma_button.story.dart';
 import 'stories/components/buttons/forma_icon_button.story.dart';
 import 'stories/components/inputs/forma_text_field.story.dart';
 import 'stories/components/inputs/forma_time_picker.story.dart';
+import 'stories/components/inputs/forma_select_chip.story.dart';
+import 'stories/components/inputs/forma_switch.story.dart';
 import 'stories/components/display/forma_avatar.story.dart';
 import 'stories/components/display/forma_badge.story.dart';
 import 'stories/components/display/forma_card.story.dart';
@@ -18,8 +20,16 @@ import 'stories/components/display/forma_mode_toggle.story.dart';
 import 'stories/components/display/forma_person_chip.story.dart';
 import 'stories/components/display/forma_timeline.story.dart';
 import 'stories/components/display/forma_whatsapp_preview.story.dart';
+import 'stories/components/display/forma_stat_tile.story.dart';
+import 'stories/components/display/forma_settings_row.story.dart';
+import 'stories/components/display/forma_role_badge.story.dart';
+import 'stories/components/display/forma_order_card.story.dart';
+import 'stories/components/display/forma_proof_icon.story.dart';
+import 'stories/components/display/forma_chip.story.dart';
+import 'stories/components/display/forma_status_badge.story.dart';
 import 'stories/components/navigation/forma_bottom_nav.story.dart';
 import 'stories/components/navigation/forma_app_header.story.dart';
+import 'stories/components/navigation/forma_segmented_control.story.dart';
 import 'stories/components/feedback/forma_alert_banner.story.dart';
 import 'stories/components/feedback/forma_loading.story.dart';
 import 'stories/components/feedback/forma_push_notification.story.dart';
@@ -70,7 +80,12 @@ class WidgetbookApp extends StatelessWidget {
             ),
             WidgetbookFolder(
               name: 'Inputs',
-              children: [formaTextFieldComponent(), formaTimePickerComponent()],
+              children: [
+                formaTextFieldComponent(),
+                formaTimePickerComponent(),
+                formaSelectChipComponent(),
+                formaSwitchComponent(),
+              ],
             ),
             WidgetbookFolder(
               name: 'Display',
@@ -82,11 +97,22 @@ class WidgetbookApp extends StatelessWidget {
                 formaPersonChipComponent(),
                 formaTimelineComponent(),
                 formaWhatsAppPreviewComponent(),
+                formaStatTileComponent(),
+                formaSettingsRowComponent(),
+                formaRoleBadgeComponent(),
+                formaOrderCardComponent(),
+                formaProofIconComponent(),
+                formaChipComponent(),
+                formaStatusBadgeComponent(),
               ],
             ),
             WidgetbookFolder(
               name: 'Navigation',
-              children: [formaBottomNavComponent(), formaAppHeaderComponent()],
+              children: [
+                formaBottomNavComponent(),
+                formaAppHeaderComponent(),
+                formaSegmentedControlComponent(),
+              ],
             ),
             WidgetbookFolder(
               name: 'Feedback',

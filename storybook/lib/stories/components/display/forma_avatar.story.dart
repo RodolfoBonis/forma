@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forma_core/forma_core.dart';
+import 'package:forma_theme_dominus/forma_theme_dominus.dart';
 import 'package:forma_theme_plantao_facil/forma_theme_plantao_facil.dart';
 import 'package:widgetbook/widgetbook.dart';
 
@@ -53,6 +54,31 @@ WidgetbookComponent formaAvatarComponent() {
                   ),
                   const SizedBox(width: 16),
                 ],
+              ],
+            ),
+          );
+        },
+      ),
+      WidgetbookUseCase(
+        name: 'Role rings (Dom / Sub)',
+        builder: (context) {
+          return const Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FormaAvatar(
+                  initial: 'R',
+                  color: Color(0xFF7E1A36),
+                  size: FormaAvatarSize.large,
+                  ringColor: DominusColors.roleDom,
+                ),
+                SizedBox(width: 24),
+                FormaAvatar(
+                  initial: 'M',
+                  color: Color(0xFF7E1A36),
+                  size: FormaAvatarSize.large,
+                  ringColor: DominusColors.roleSub,
+                ),
               ],
             ),
           );

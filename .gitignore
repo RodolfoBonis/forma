@@ -5,6 +5,7 @@ pubspec_overrides.yaml
 
 # Flutter
 build/
+coverage/
 *.g.dart
 *.freezed.dart
 

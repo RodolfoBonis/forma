@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forma_core/forma_core.dart';
+import 'package:forma_theme_dominus/forma_theme_dominus.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 /// FormaBottomNav story — with navigation items.
@@ -16,11 +17,22 @@ WidgetbookComponent formaBottomNavComponent() {
             labelBuilder: (i) => i.toString(),
             initialOption: 0,
           );
+          final role = context.knobs.object.dropdown<String>(
+            label: 'Role',
+            options: ['Default', 'Dom', 'Sub'],
+            initialOption: 'Default',
+          );
+          final activeColor = switch (role) {
+            'Dom' => DominusColors.roleDom,
+            'Sub' => DominusColors.roleSub,
+            _ => null,
+          };
 
           return Align(
             alignment: Alignment.bottomCenter,
             child: FormaBottomNav(
               activeIndex: activeIndex,
+              activeColor: activeColor,
               onTap: (_) {},
               items: const [
                 FormaNavItem(label: 'Inicio', icon: Icons.home_outlined),

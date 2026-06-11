@@ -101,7 +101,7 @@ jobs:
       - name: Bump pubspec versions
         run: |
           NEW_VERSION=${{ steps.version.outputs.new_version }}
-          for f in packages/forma_core/pubspec.yaml packages/forma_theme_plantao_facil/pubspec.yaml; do
+          for f in packages/forma_core/pubspec.yaml packages/forma_theme_plantao_facil/pubspec.yaml packages/forma_theme_dominus/pubspec.yaml; do
             sed -i -E "s/^version: .*/version: ${NEW_VERSION}/" "$f"
           done
           git diff --stat
@@ -112,7 +112,7 @@ jobs:
           if git diff --quiet; then
             echo "No version change detected; skipping bump commit."
           else
-            git add packages/forma_core/pubspec.yaml packages/forma_theme_plantao_facil/pubspec.yaml
+            git add packages/forma_core/pubspec.yaml packages/forma_theme_plantao_facil/pubspec.yaml packages/forma_theme_dominus/pubspec.yaml
             git commit -m "chore(release): v${NEW_VERSION} [skip ci]"
             git push origin HEAD:main
           fi
@@ -129,6 +129,7 @@ jobs:
           |---------|---------|
           | \`forma_core\` | v${NEW_VERSION} |
           | \`forma_theme_plantao_facil\` | v${NEW_VERSION} |
+          | \`forma_theme_dominus\` | v${NEW_VERSION} |
 
           ## Changes
           NOTES
@@ -141,6 +142,7 @@ jobs:
 
           git tag "forma_core-v${NEW_VERSION}"
           git tag "forma_theme_plantao_facil-v${NEW_VERSION}"
+          git tag "forma_theme_dominus-v${NEW_VERSION}"
           git tag "v${NEW_VERSION}"
           git push --tags
 
@@ -193,3 +195,32 @@ jobs:
 
           dart pub publish --force
           rm -rf /tmp/theme_publish
+
+      - name: Publish forma_theme_dominus
+        env:
+          PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
+          NEW_VERSION: ${{ steps.version.outputs.new_version }}
+        run: |
+          cp -r packages/forma_theme_dominus /tmp/dominus_publish
+          cd /tmp/dominus_publish
+
+          # Remove workspace resolution
+          sed -i '/^resolution: workspace$/d' pubspec.yaml
+
+          # Point forma_core to hosted private pub
+          python3 -c "
+          import os, re
+          version = os.environ['NEW_VERSION']
+          with open('pubspec.yaml', 'r') as f:
+              content = f.read()
+          content = re.sub(
+              r'  forma_core: \^.*',
+              f'  forma_core:\n    hosted:\n      name: forma_core\n      url: https://pub.rodolfodebonis.com.br\n    version: ^{version}',
+              content
+          )
+          with open('pubspec.yaml', 'w') as f:
+              f.write(content)
+          "
+
+          dart pub publish --force
+          rm -rf /tmp/dominus_publish
