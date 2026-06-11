@@ -39,6 +39,7 @@ class FormaBottomNav extends StatelessWidget {
     required this.activeIndex,
     required this.onTap,
     required this.items,
+    this.activeColor,
   });
 
   /// The index of the currently active item.
@@ -50,9 +51,15 @@ class FormaBottomNav extends StatelessWidget {
   /// Navigation items to display.
   final List<FormaNavItem> items;
 
+  /// Tint for the active item's dot, icon, and label. Defaults to
+  /// [FormaThemeExtension.primaryColor] — override per role (e.g. brass for
+  /// a Dom role, wine for a Sub role).
+  final Color? activeColor;
+
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final activeTint = activeColor ?? ext.primaryColor;
 
     return Container(
       height: 74,
@@ -82,7 +89,7 @@ class FormaBottomNav extends StatelessWidget {
                       height: 6,
                       margin: const EdgeInsets.only(bottom: 5),
                       decoration: BoxDecoration(
-                        color: isActive ? ext.primaryColor : Colors.transparent,
+                        color: isActive ? activeTint : Colors.transparent,
                         borderRadius: BorderRadius.circular(3),
                       ),
                     ),
@@ -91,7 +98,7 @@ class FormaBottomNav extends StatelessWidget {
                     else
                       Icon(
                         item.icon,
-                        color: isActive ? ext.primaryColor : ext.textMuted,
+                        color: isActive ? activeTint : ext.textMuted,
                         size: 24,
                       ),
                     const SizedBox(height: 4),
@@ -102,9 +109,7 @@ class FormaBottomNav extends StatelessWidget {
                                   ? FormaTypography.nav10Bold
                                   : FormaTypography.nav10)
                               .copyWith(
-                                color: isActive
-                                    ? ext.primaryColor
-                                    : ext.textMuted,
+                                color: isActive ? activeTint : ext.textMuted,
                               ),
                     ),
                   ],

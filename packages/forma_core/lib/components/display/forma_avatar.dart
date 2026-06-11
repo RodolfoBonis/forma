@@ -38,6 +38,9 @@ class FormaAvatar extends StatelessWidget {
     this.size = FormaAvatarSize.medium,
     this.borderColor,
     this.borderWidth = 0,
+    this.ringColor,
+    this.ringWidth = 2,
+    this.ringGap = 2,
     super.key,
   });
 
@@ -60,46 +63,70 @@ class FormaAvatar extends StatelessWidget {
   /// Border width in logical pixels. Only visible when [borderColor] is set.
   final double borderWidth;
 
+  /// Optional outer ring color (e.g. a role marker). Drawn outside the
+  /// avatar with a [ringGap] of transparent space between them.
+  final Color? ringColor;
+
+  /// Width of the outer ring. Only visible when [ringColor] is set.
+  final double ringWidth;
+
+  /// Transparent gap between the avatar and the outer ring.
+  final double ringGap;
+
   @override
   Widget build(BuildContext context) {
     final innerSize = size.diameter - (borderWidth * 2);
 
-    return Semantics(
-      label: initial,
-      child: Container(
-        width: size.diameter,
-        height: size.diameter,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(size.borderRadius)),
-          border: borderColor != null
-              ? Border.all(color: borderColor!, width: borderWidth)
-              : null,
+    final avatar = Container(
+      width: size.diameter,
+      height: size.diameter,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(size.borderRadius)),
+        border: borderColor != null
+            ? Border.all(color: borderColor!, width: borderWidth)
+            : null,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(
+          Radius.circular(size.borderRadius - borderWidth),
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(
-            Radius.circular(size.borderRadius - borderWidth),
-          ),
-          child: imageUrl != null
-              ? Image.network(
-                  imageUrl!,
-                  width: innerSize,
-                  height: innerSize,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => _InitialFallback(
-                    initial: initial,
-                    color: color,
-                    size: innerSize,
-                    fontSize: size.fontSize,
-                  ),
-                )
-              : _InitialFallback(
+        child: imageUrl != null
+            ? Image.network(
+                imageUrl!,
+                width: innerSize,
+                height: innerSize,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => _InitialFallback(
                   initial: initial,
                   color: color,
                   size: innerSize,
                   fontSize: size.fontSize,
                 ),
-        ),
+              )
+            : _InitialFallback(
+                initial: initial,
+                color: color,
+                size: innerSize,
+                fontSize: size.fontSize,
+              ),
       ),
+    );
+
+    return Semantics(
+      label: initial,
+      child: ringColor == null ? avatar : _wrapWithRing(avatar),
+    );
+  }
+
+  Widget _wrapWithRing(Widget avatar) {
+    final outerRadius = size.borderRadius + ringGap + ringWidth;
+    return Container(
+      padding: EdgeInsets.all(ringGap),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(outerRadius)),
+        border: Border.all(color: ringColor!, width: ringWidth),
+      ),
+      child: avatar,
     );
   }
 }
