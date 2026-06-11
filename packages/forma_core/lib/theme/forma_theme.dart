@@ -10,17 +10,26 @@ import 'forma_theme_extension.dart';
 class FormaTheme {
   /// Builds a [ThemeData] configured with Material 3, a seed-based
   /// [ColorScheme], the provided [extension], and the given [fontFamily].
+  ///
+  /// Pass [brightness] to produce a dark theme (defaults to
+  /// [Brightness.light] to preserve existing light-only themes).
   static ThemeData build({
     required FormaThemeExtension extension,
     required String fontFamily,
     required Color seedColor,
+    Brightness brightness = Brightness.light,
   }) {
-    final colorScheme = ColorScheme.fromSeed(seedColor: seedColor);
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: seedColor,
+      brightness: brightness,
+    );
     final textTheme = GoogleFonts.getTextTheme(fontFamily);
 
     return ThemeData(
       useMaterial3: true,
+      brightness: brightness,
       colorScheme: colorScheme,
+      scaffoldBackgroundColor: extension.appBackground,
       textTheme: textTheme,
       extensions: <ThemeExtension<dynamic>>[extension],
     );

@@ -33,6 +33,11 @@ class FormaThemeExtension extends ThemeExtension<FormaThemeExtension> {
     required this.errorText,
     required this.infoSurface,
     required this.infoText,
+    this.primaryHover,
+    this.primaryPress,
+    this.primarySubtle,
+    this.onPrimary,
+    this.surfaceElevated,
   });
 
   /// Main scaffold / page background.
@@ -113,6 +118,44 @@ class FormaThemeExtension extends ThemeExtension<FormaThemeExtension> {
   /// Informational foreground text.
   final Color infoText;
 
+  // ---------------------------------------------------------------------------
+  // Extended slots (optional) — richer brand-state tokens.
+  //
+  // Added to carry design systems with hover/press/on-primary/elevated tokens
+  // (e.g. Dominus). Optional for backward compatibility: existing themes that
+  // omit them fall back to base slots via the `resolved*` getters below.
+  // ---------------------------------------------------------------------------
+
+  /// Primary brand color in the hovered state.
+  final Color? primaryHover;
+
+  /// Primary brand color in the pressed state.
+  final Color? primaryPress;
+
+  /// Subtle primary-tinted surface (distinct from [primarySurface]).
+  final Color? primarySubtle;
+
+  /// Foreground color rendered on top of [primaryColor].
+  final Color? onPrimary;
+
+  /// Elevated surface above [cardBackground] (sheets, popovers, raised cards).
+  final Color? surfaceElevated;
+
+  /// [primaryHover] or, when absent, [primaryColor].
+  Color get resolvedPrimaryHover => primaryHover ?? primaryColor;
+
+  /// [primaryPress] or, when absent, [primaryColor].
+  Color get resolvedPrimaryPress => primaryPress ?? primaryColor;
+
+  /// [primarySubtle] or, when absent, [primarySurface].
+  Color get resolvedPrimarySubtle => primarySubtle ?? primarySurface;
+
+  /// [onPrimary] or, when absent, opaque white.
+  Color get resolvedOnPrimary => onPrimary ?? const Color(0xFFFFFFFF);
+
+  /// [surfaceElevated] or, when absent, [cardBackground].
+  Color get resolvedSurfaceElevated => surfaceElevated ?? cardBackground;
+
   @override
   FormaThemeExtension copyWith({
     Color? appBackground,
@@ -141,6 +184,11 @@ class FormaThemeExtension extends ThemeExtension<FormaThemeExtension> {
     Color? errorText,
     Color? infoSurface,
     Color? infoText,
+    Color? primaryHover,
+    Color? primaryPress,
+    Color? primarySubtle,
+    Color? onPrimary,
+    Color? surfaceElevated,
   }) {
     return FormaThemeExtension(
       appBackground: appBackground ?? this.appBackground,
@@ -169,6 +217,11 @@ class FormaThemeExtension extends ThemeExtension<FormaThemeExtension> {
       errorText: errorText ?? this.errorText,
       infoSurface: infoSurface ?? this.infoSurface,
       infoText: infoText ?? this.infoText,
+      primaryHover: primaryHover ?? this.primaryHover,
+      primaryPress: primaryPress ?? this.primaryPress,
+      primarySubtle: primarySubtle ?? this.primarySubtle,
+      onPrimary: onPrimary ?? this.onPrimary,
+      surfaceElevated: surfaceElevated ?? this.surfaceElevated,
     );
   }
 
@@ -206,6 +259,11 @@ class FormaThemeExtension extends ThemeExtension<FormaThemeExtension> {
       errorText: Color.lerp(errorText, other.errorText, t)!,
       infoSurface: Color.lerp(infoSurface, other.infoSurface, t)!,
       infoText: Color.lerp(infoText, other.infoText, t)!,
+      primaryHover: Color.lerp(primaryHover, other.primaryHover, t),
+      primaryPress: Color.lerp(primaryPress, other.primaryPress, t),
+      primarySubtle: Color.lerp(primarySubtle, other.primarySubtle, t),
+      onPrimary: Color.lerp(onPrimary, other.onPrimary, t),
+      surfaceElevated: Color.lerp(surfaceElevated, other.surfaceElevated, t),
     );
   }
 }
