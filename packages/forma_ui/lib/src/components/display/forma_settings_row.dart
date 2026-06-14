@@ -36,6 +36,7 @@ class FormaSettingsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
 
+    final typo = context.formaTypography;
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -56,17 +57,13 @@ class FormaSettingsRow extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: FormaTypography.title15.copyWith(
-                        color: ext.textPrimary,
-                      ),
+                      style: typo.title15.copyWith(color: ext.textPrimary),
                     ),
                     if (subtitle != null) ...[
                       const SizedBox(height: 2),
                       Text(
                         subtitle!,
-                        style: FormaTypography.caption12.copyWith(
-                          color: ext.textMuted,
-                        ),
+                        style: typo.caption12.copyWith(color: ext.textMuted),
                       ),
                     ],
                   ],

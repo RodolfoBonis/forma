@@ -25,6 +25,7 @@ class FormaTimePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
 
+    final typo = context.formaTypography;
     final displayText = value != null ? value!.format(context) : '--:--';
 
     final field = Semantics(
@@ -47,7 +48,7 @@ class FormaTimePicker extends StatelessWidget {
               Expanded(
                 child: Text(
                   displayText,
-                  style: FormaTypography.body16.copyWith(
+                  style: typo.body16.copyWith(
                     color: value != null ? ext.textPrimary : ext.textHint,
                   ),
                 ),
@@ -67,7 +68,7 @@ class FormaTimePicker extends StatelessWidget {
       children: [
         Text(
           label!.toUpperCase(),
-          style: FormaTypography.overline10.copyWith(color: ext.textMuted),
+          style: typo.overline10.copyWith(color: ext.textMuted),
         ),
         const SizedBox(height: FormaSpacing.xs),
         field,

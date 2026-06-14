@@ -36,12 +36,16 @@ const FormaThemeExtension testExtension = FormaThemeExtension(
   surfaceElevated: Color(0xFF221B28),
 );
 
-/// Wraps [child] in a [MaterialApp] carrying [testExtension] so components
-/// that read `Theme.of(context).extension<FormaThemeExtension>()` resolve.
+/// Wraps [child] in a [MaterialApp] carrying [testExtension] and a
+/// [FormaTypographyExtension] so components that read
+/// `Theme.of(context).extension<…>()` (colors and typography) resolve.
 Widget wrapForTest(Widget child) {
   return MaterialApp(
     theme: ThemeData(
-      extensions: const <ThemeExtension<dynamic>>[testExtension],
+      extensions: <ThemeExtension<dynamic>>[
+        testExtension,
+        FormaTypographyExtension.fromFont('Inter'),
+      ],
     ),
     home: Scaffold(body: Center(child: child)),
   );

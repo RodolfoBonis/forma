@@ -24,6 +24,7 @@ class FormaStepIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
 
+    final typo = context.formaTypography;
     return Semantics(
       label: 'Passo $currentStep de $totalSteps',
       child: Column(
@@ -53,7 +54,7 @@ class FormaStepIndicator extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             'Passo $currentStep de $totalSteps',
-            style: FormaTypography.caption12.copyWith(color: ext.textMuted),
+            style: typo.caption12.copyWith(color: ext.textMuted),
           ),
         ],
       ),

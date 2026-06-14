@@ -31,6 +31,7 @@ class FormaTimeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final typo = context.formaTypography;
 
     return Container(
       padding: const EdgeInsets.all(FormaSpacing.md),
@@ -43,21 +44,22 @@ class FormaTimeline extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            title,
-            style: FormaTypography.title16.copyWith(color: ext.textPrimary),
-          ),
+          Text(title, style: typo.title16.copyWith(color: ext.textPrimary)),
           const SizedBox(height: FormaSpacing.md),
           for (int i = 0; i < steps.length; i++) ...[
             if (i > 0) const SizedBox(height: FormaSpacing.sm),
-            _buildStep(steps[i], ext),
+            _buildStep(steps[i], ext, typo),
           ],
         ],
       ),
     );
   }
 
-  Widget _buildStep(FormaTimelineStep step, FormaThemeExtension ext) {
+  Widget _buildStep(
+    FormaTimelineStep step,
+    FormaThemeExtension ext,
+    FormaTypographyExtension typo,
+  ) {
     return Row(
       children: [
         Container(
@@ -72,12 +74,12 @@ class FormaTimeline extends StatelessWidget {
         Expanded(
           child: Text(
             step.label,
-            style: FormaTypography.body14.copyWith(color: ext.textPrimary),
+            style: typo.body14.copyWith(color: ext.textPrimary),
           ),
         ),
         Text(
           step.timing,
-          style: FormaTypography.caption12.copyWith(color: ext.textMuted),
+          style: typo.caption12.copyWith(color: ext.textMuted),
           textAlign: TextAlign.right,
         ),
       ],

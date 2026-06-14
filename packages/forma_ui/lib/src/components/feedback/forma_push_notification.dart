@@ -32,6 +32,7 @@ class FormaPushNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final typo = context.formaTypography;
 
     return Container(
       padding: const EdgeInsets.all(FormaSpacing.md),
@@ -53,7 +54,7 @@ class FormaPushNotification extends StatelessWidget {
         children: [
           Row(
             children: [
-              _buildAppIcon(ext),
+              _buildAppIcon(ext, typo),
               const SizedBox(width: FormaSpacing.sm),
               Expanded(
                 child: Column(
@@ -61,15 +62,11 @@ class FormaPushNotification extends StatelessWidget {
                   children: [
                     Text(
                       appName,
-                      style: FormaTypography.body14Medium.copyWith(
-                        color: ext.textPrimary,
-                      ),
+                      style: typo.body14Medium.copyWith(color: ext.textPrimary),
                     ),
                     Text(
                       timestamp,
-                      style: FormaTypography.caption12.copyWith(
-                        color: ext.textMuted,
-                      ),
+                      style: typo.caption12.copyWith(color: ext.textMuted),
                     ),
                   ],
                 ),
@@ -77,16 +74,13 @@ class FormaPushNotification extends StatelessWidget {
             ],
           ),
           const SizedBox(height: FormaSpacing.sm),
-          Text(
-            body,
-            style: FormaTypography.body13.copyWith(color: ext.textPrimary),
-          ),
+          Text(body, style: typo.body13.copyWith(color: ext.textPrimary)),
         ],
       ),
     );
   }
 
-  Widget _buildAppIcon(FormaThemeExtension ext) {
+  Widget _buildAppIcon(FormaThemeExtension ext, FormaTypographyExtension typo) {
     if (appIcon != null) return SizedBox(width: 44, height: 44, child: appIcon);
 
     return Container(
@@ -99,7 +93,7 @@ class FormaPushNotification extends StatelessWidget {
       alignment: Alignment.center,
       child: Text(
         appName.isNotEmpty ? appName[0].toUpperCase() : '',
-        style: FormaTypography.title18.copyWith(color: Colors.white),
+        style: typo.title18.copyWith(color: Colors.white),
       ),
     );
   }

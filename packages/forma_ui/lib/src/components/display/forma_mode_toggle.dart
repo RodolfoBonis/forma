@@ -30,6 +30,7 @@ class FormaModeToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
 
+    final typo = context.formaTypography;
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
@@ -57,16 +58,13 @@ class FormaModeToggle extends StatelessWidget {
                   ),
                   child: Text(
                     options[index],
-                    style:
-                        (isSelected
-                                ? FormaTypography.body14Medium
-                                : FormaTypography.body14)
-                            .copyWith(
-                              color: isSelected ? Colors.white : ext.textMuted,
-                              fontWeight: isSelected
-                                  ? FontWeight.w700
-                                  : FontWeight.w400,
-                            ),
+                    style: (isSelected ? typo.body14Medium : typo.body14)
+                        .copyWith(
+                          color: isSelected ? Colors.white : ext.textMuted,
+                          fontWeight: isSelected
+                              ? FontWeight.w700
+                              : FontWeight.w400,
+                        ),
                   ),
                 ),
               ),

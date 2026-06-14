@@ -35,6 +35,7 @@ class FormaSelectChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
 
+    final typo = context.formaTypography;
     final background = selected
         ? ext.resolvedPrimarySubtle
         : Colors.transparent;
@@ -72,9 +73,7 @@ class FormaSelectChip extends StatelessWidget {
                 ],
                 Text(
                   label,
-                  style: FormaTypography.body14Medium.copyWith(
-                    color: foreground,
-                  ),
+                  style: typo.body14Medium.copyWith(color: foreground),
                 ),
               ],
             ),

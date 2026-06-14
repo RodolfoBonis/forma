@@ -36,6 +36,7 @@ class FormaStatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final typo = context.formaTypography;
     final iconColor = color ?? ext.primaryColor;
 
     return Container(
@@ -54,17 +55,11 @@ class FormaStatTile extends StatelessWidget {
             children: [
               Icon(icon, size: 18, color: iconColor),
               const SizedBox(width: FormaSpacing.sm),
-              Text(
-                value,
-                style: FormaTypography.title18.copyWith(color: ext.textPrimary),
-              ),
+              Text(value, style: typo.title18.copyWith(color: ext.textPrimary)),
             ],
           ),
           const SizedBox(height: FormaSpacing.xs),
-          Text(
-            label,
-            style: FormaTypography.caption12.copyWith(color: ext.textMuted),
-          ),
+          Text(label, style: typo.caption12.copyWith(color: ext.textMuted)),
         ],
       ),
     );

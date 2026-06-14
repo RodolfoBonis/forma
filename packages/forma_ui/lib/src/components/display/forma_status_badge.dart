@@ -58,6 +58,7 @@ class FormaStatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final typo = context.formaTypography;
     final color = _resolveColor(ext);
     final text = label ?? variant.label;
 
@@ -79,10 +80,7 @@ class FormaStatusBadge extends StatelessWidget {
               decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             ),
             const SizedBox(width: FormaSpacing.sm),
-            Text(
-              text,
-              style: FormaTypography.caption12Med.copyWith(color: color),
-            ),
+            Text(text, style: typo.caption12Med.copyWith(color: color)),
           ],
         ),
       ),

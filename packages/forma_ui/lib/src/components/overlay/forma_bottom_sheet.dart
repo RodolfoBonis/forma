@@ -60,6 +60,7 @@ class FormaBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
 
+    final typo = context.formaTypography;
     return DraggableScrollableSheet(
       initialChildSize: minChildSize,
       minChildSize: minChildSize,
@@ -96,9 +97,7 @@ class FormaBottomSheet extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 18),
                   child: Text(
                     title!,
-                    style: FormaTypography.title18.copyWith(
-                      color: ext.textPrimary,
-                    ),
+                    style: typo.title18.copyWith(color: ext.textPrimary),
                   ),
                 ),
               // Content

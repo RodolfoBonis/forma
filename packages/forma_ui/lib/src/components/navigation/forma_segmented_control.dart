@@ -42,6 +42,7 @@ class FormaSegmentedControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final typo = context.formaTypography;
 
     return Container(
       height: _height,
@@ -56,13 +57,17 @@ class FormaSegmentedControl extends StatelessWidget {
       child: Row(
         children: [
           for (var i = 0; i < segments.length; i++)
-            Expanded(child: _buildSegment(ext, i)),
+            Expanded(child: _buildSegment(ext, typo, i)),
         ],
       ),
     );
   }
 
-  Widget _buildSegment(FormaThemeExtension ext, int index) {
+  Widget _buildSegment(
+    FormaThemeExtension ext,
+    FormaTypographyExtension typo,
+    int index,
+  ) {
     final segment = segments[index];
     final isActive = index == selectedIndex;
     final foreground = isActive ? ext.textPrimary : ext.textMuted;
@@ -91,11 +96,9 @@ class FormaSegmentedControl extends StatelessWidget {
               child: Text(
                 segment.label,
                 overflow: TextOverflow.ellipsis,
-                style:
-                    (isActive
-                            ? FormaTypography.body14Medium
-                            : FormaTypography.body14)
-                        .copyWith(color: foreground),
+                style: (isActive ? typo.body14Medium : typo.body14).copyWith(
+                  color: foreground,
+                ),
               ),
             ),
           ],

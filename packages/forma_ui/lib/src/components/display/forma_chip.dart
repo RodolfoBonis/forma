@@ -27,6 +27,7 @@ class FormaChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final typo = context.formaTypography;
     final foreground = color ?? ext.textMuted;
     final borderColor = color ?? ext.border;
 
@@ -49,10 +50,7 @@ class FormaChip extends StatelessWidget {
               Icon(icon, size: 14, color: foreground),
               const SizedBox(width: FormaSpacing.xs),
             ],
-            Text(
-              label,
-              style: FormaTypography.caption12Med.copyWith(color: foreground),
-            ),
+            Text(label, style: typo.caption12Med.copyWith(color: foreground)),
           ],
         ),
       ),

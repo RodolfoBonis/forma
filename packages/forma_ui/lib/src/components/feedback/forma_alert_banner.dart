@@ -44,6 +44,7 @@ class FormaAlertBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final typo = context.formaTypography;
     final colors = _resolveColors(ext);
 
     return Semantics(
@@ -62,7 +63,7 @@ class FormaAlertBanner extends StatelessWidget {
             Expanded(
               child: Text(
                 message,
-                style: FormaTypography.body14.copyWith(color: colors.text),
+                style: typo.body14.copyWith(color: colors.text),
               ),
             ),
           ],

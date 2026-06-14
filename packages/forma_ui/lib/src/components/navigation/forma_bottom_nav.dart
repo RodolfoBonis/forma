@@ -58,6 +58,7 @@ class FormaBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final typo = context.formaTypography;
     final activeTint = activeColor ?? ext.primaryColor;
 
     return Container(
@@ -103,13 +104,9 @@ class FormaBottomNav extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       item.label,
-                      style:
-                          (isActive
-                                  ? FormaTypography.nav10Bold
-                                  : FormaTypography.nav10)
-                              .copyWith(
-                                color: isActive ? activeTint : ext.textMuted,
-                              ),
+                      style: (isActive ? typo.nav10Bold : typo.nav10).copyWith(
+                        color: isActive ? activeTint : ext.textMuted,
+                      ),
                     ),
                   ],
                 ),

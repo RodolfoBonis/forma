@@ -62,10 +62,11 @@ class FormaTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final typo = context.formaTypography;
 
     final decoration = InputDecoration(
       hintText: hint,
-      hintStyle: FormaTypography.body16.copyWith(color: ext.textHint),
+      hintStyle: typo.body16.copyWith(color: ext.textHint),
       prefixIcon: prefix,
       suffixIcon: suffix,
       enabled: enabled,
@@ -80,14 +81,14 @@ class FormaTextField extends StatelessWidget {
       errorBorder: _buildBorder(ext.errorColor, 2),
       focusedErrorBorder: _buildBorder(ext.errorColor, 2),
       disabledBorder: _buildBorder(ext.border, 0.5),
-      errorStyle: FormaTypography.caption12.copyWith(color: ext.errorColor),
+      errorStyle: typo.caption12.copyWith(color: ext.errorColor),
     );
 
     final field = TextFormField(
       controller: controller,
       validator: validator,
       decoration: decoration,
-      style: FormaTypography.body16.copyWith(color: ext.textPrimary),
+      style: typo.body16.copyWith(color: ext.textPrimary),
       keyboardType: keyboardType,
       obscureText: obscureText,
       maxLines: maxLines,
@@ -103,7 +104,7 @@ class FormaTextField extends StatelessWidget {
       children: [
         Text(
           label!.toUpperCase(),
-          style: FormaTypography.overline10.copyWith(color: ext.textMuted),
+          style: typo.overline10.copyWith(color: ext.textMuted),
         ),
         const SizedBox(height: FormaSpacing.xs),
         field,

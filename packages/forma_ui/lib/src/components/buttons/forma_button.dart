@@ -101,6 +101,7 @@ class FormaButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final typo = context.formaTypography;
     final colors = _resolveColors(ext);
     final isDisabled = variant == FormaButtonVariant.disabled;
     final effectiveOnPressed = isDisabled || isLoading ? null : onPressed;
@@ -139,7 +140,7 @@ class FormaButton extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(colors.foreground),
             ),
           )
-        : _buildLabel(colors.foreground);
+        : _buildLabel(colors.foreground, typo);
 
     return Semantics(
       button: true,
@@ -153,8 +154,8 @@ class FormaButton extends StatelessWidget {
     );
   }
 
-  Widget _buildLabel(Color foreground) {
-    final textStyle = FormaTypography.title15.copyWith(color: foreground);
+  Widget _buildLabel(Color foreground, FormaTypographyExtension typo) {
+    final textStyle = typo.title15.copyWith(color: foreground);
 
     if (icon == null) {
       return Text(label, style: textStyle);

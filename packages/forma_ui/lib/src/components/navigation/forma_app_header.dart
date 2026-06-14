@@ -53,6 +53,7 @@ class FormaAppHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final typo = context.formaTypography;
     final topPadding = MediaQuery.of(context).padding.top;
 
     return Container(
@@ -86,7 +87,7 @@ class FormaAppHeader extends StatelessWidget implements PreferredSizeWidget {
             Center(
               child: Text(
                 title!,
-                style: FormaTypography.title18.copyWith(color: ext.textPrimary),
+                style: typo.title18.copyWith(color: ext.textPrimary),
               ),
             ),
 
