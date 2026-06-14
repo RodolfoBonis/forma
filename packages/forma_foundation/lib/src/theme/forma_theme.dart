@@ -27,11 +27,15 @@ class FormaTheme {
 
     // Fall back to the default text theme when the Google font can't be
     // resolved (e.g. offline, or in tests with runtime fetching disabled).
+    // Skip the lookup entirely when runtime fetching is off, since
+    // `getTextTheme` schedules unawaited font loads that throw asynchronously.
     TextTheme? textTheme;
-    try {
-      textTheme = GoogleFonts.getTextTheme(fontFamily);
-    } on Exception {
-      textTheme = null;
+    if (GoogleFonts.config.allowRuntimeFetching) {
+      try {
+        textTheme = GoogleFonts.getTextTheme(fontFamily);
+      } on Exception {
+        textTheme = null;
+      }
     }
 
     return ThemeData(

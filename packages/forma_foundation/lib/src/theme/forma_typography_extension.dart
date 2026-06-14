@@ -43,6 +43,16 @@ class FormaTypographyExtension
   /// unknown family), so theme construction never throws.
   factory FormaTypographyExtension.fromFont(String fontFamily) {
     TextStyle style(double size, FontWeight weight, {double? letterSpacing}) {
+      final fallback = TextStyle(
+        fontFamily: fontFamily,
+        fontSize: size,
+        fontWeight: weight,
+        letterSpacing: letterSpacing,
+      );
+      // Skip Google Fonts when runtime fetching is off (e.g. in tests):
+      // `getFont` would otherwise schedule an unawaited font load that throws
+      // asynchronously into the zone, which a synchronous catch can't handle.
+      if (!GoogleFonts.config.allowRuntimeFetching) return fallback;
       try {
         return GoogleFonts.getFont(
           fontFamily,
@@ -51,12 +61,7 @@ class FormaTypographyExtension
           letterSpacing: letterSpacing,
         );
       } on Exception {
-        return TextStyle(
-          fontFamily: fontFamily,
-          fontSize: size,
-          fontWeight: weight,
-          letterSpacing: letterSpacing,
-        );
+        return fallback;
       }
     }
 
