@@ -4,25 +4,56 @@ Forma is a multi-app Flutter design system built for consistency, speed, and the
 
 ## Architecture
 
+Forma is a layered set of packages. Each layer depends only on the one below
+it, so apps share a brand-agnostic base while owning their own brand and
+domain widgets.
+
 ```
 forma/
 ├── packages/
-│   ├── forma_core/                  # Components, tokens, theme engine
+│   ├── forma_foundation/            # Tokens + theme engine + FormaThemeExtension
+│   ├── forma_icons/                 # Semantic icon keys + brand SVG registry
+│   ├── forma_ui/                    # Brand-agnostic UI primitives
+│   ├── forma_core/                  # Compatibility facade (re-exports foundation + ui)
 │   ├── forma_theme_plantao_facil/   # Plantao Facil theme variant
+│   ├── forma_theme_dominus/         # Dominus theme variant
 │   └── _template/                   # Scaffold for new themes
-└── storybook/                       # Widgetbook visual documentation
+└── forma_gallery/                   # Component gallery & docs
 ```
 
-**forma_core** provides the building blocks: buttons, inputs, cards, navigation, feedback, overlays, and a full token system (spacing, radius, typography, durations). It defines a `FormaThemeExtension` with 26 semantic color slots that theme packages fill in.
+Dependency direction (no cycles):
 
-**Theme packages** (like `forma_theme_plantao_facil`) supply colors, person colors, and typography overrides for a specific brand. Creating a new theme is a single command.
+```
+forma_foundation ← forma_icons ← forma_ui ← forma_theme_<brand> ← forma_gallery
+```
+
+- **forma_foundation** — design tokens (spacing, radius, typography, durations),
+  the theme engine (`FormaTheme.build`), and the contracts: `FormaThemeExtension`
+  (26 semantic color slots) and `FormaTypographyExtension` (a font-driven type
+  scale, so each brand can ship its own typeface).
+- **forma_icons** — type-safe semantic icon keys (`FormaIconKey`) backed by
+  Material defaults, with a registry (`FormaIconScope`) so a brand can override
+  any key with its own SVG.
+- **forma_ui** — the brand-agnostic primitives (buttons, inputs, cards,
+  navigation, feedback, overlays). Re-exports `forma_foundation`.
+- **forma_core** — a thin compatibility facade that re-exports `forma_foundation`
+  and `forma_ui`. Prefer depending on the specific layers directly.
+- **Theme packages** supply a brand's colors and fonts by filling
+  `FormaThemeExtension`. Creating a new theme is a single command.
+
+App-specific (domain) components do **not** live in Forma — each app owns its
+domain widgets and composes them on top of `forma_ui`.
 
 ## Packages
 
-| Package | Version | Description |
-|---------|---------|-------------|
-| `forma_core` | 1.1.0 | Core components, tokens, and theme architecture |
-| `forma_theme_plantao_facil` | 1.1.0 | Plantao Facil brand theme (Verde Floresta) |
+| Package | Description |
+|---------|-------------|
+| `forma_foundation` | Design tokens, theme engine, color & typography contracts |
+| `forma_icons` | Semantic icon keys + brand SVG registry |
+| `forma_ui` | Brand-agnostic UI primitives |
+| `forma_core` | Compatibility facade re-exporting foundation + ui |
+| `forma_theme_plantao_facil` | Plantao Facil brand theme (Verde Floresta) |
+| `forma_theme_dominus` | Dominus brand theme (dark, wine + brass) |
 
 Published on the private pub server at `pub.rodolfodebonis.com.br`.
 
@@ -236,18 +267,18 @@ melos bootstrap
 | `melos run format` | Format all packages |
 | `melos run analyze` | Analyze all packages |
 | `melos run test` | Run tests across all packages |
-| `melos run test:core` | Run tests only on forma_core |
 | `melos run ci` | Run format + analyze + test |
-| `melos run storybook:dev` | Run Widgetbook on Chrome |
-| `melos run storybook:build` | Build Widgetbook for web |
+| `melos run gallery:dev` | Run the gallery on Chrome |
+| `melos run gallery:build` | Build the gallery for web |
 | `melos run new:theme` | Scaffold a new theme variant |
 
-### Storybook
+### Gallery
 
-The Widgetbook documents all 18 components and 5 token categories with interactive knobs:
+`forma_gallery` documents every component and token category with interactive
+knobs, theme switching, and per-component docs:
 
 ```bash
-melos run storybook:dev
+melos run gallery:dev
 ```
 
 ## CI/CD
@@ -256,6 +287,7 @@ melos run storybook:dev
 |----------|---------|--------------|
 | **CI** | PR/push to `develop` | format, analyze, test |
 | **Release & Publish** | push to `main` | CI check, git tags, GitHub Release, publish to private pub |
+| **Gallery Deploy** | push to `main` | build & deploy `forma_gallery` to GitHub Pages |
 
 ### Versioning
 

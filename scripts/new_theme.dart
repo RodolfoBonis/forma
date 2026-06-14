@@ -35,7 +35,7 @@ void main(List<String> args) {
   print('   Proximos passos:');
   print('   1. Edite $dir/lib/tokens/${slug}_colors.dart');
   print('   2. Edite $dir/lib/theme/${slug}_theme.dart');
-  print('   3. Adicione ao Storybook em storybook/lib/themes/all_themes.dart');
+  print('   3. Registre o tema em forma_gallery/lib/gallery_themes.dart');
   print('   4. Rode: melos bootstrap');
 }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forma_core/forma_core.dart';
+import 'package:forma_foundation/forma_foundation.dart';
 
 import '../tokens/template_colors.dart';
 
