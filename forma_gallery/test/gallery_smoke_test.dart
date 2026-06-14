@@ -18,7 +18,12 @@ void main() {
     await tester.pumpWidget(
       GalleryApp(
         root: [
-          GalleryFolder('Components', children: [_buttonComponent()]),
+          GalleryFolder(
+            'Components',
+            children: [
+              GalleryFolder('Buttons', children: [_buttonComponent()]),
+            ],
+          ),
         ],
         themes: [GalleryTheme('Test', PlantaoFacilTestTheme.theme)],
       ),
@@ -85,8 +90,8 @@ GalleryComponent _buttonComponent() {
 /// Minimal theme carrying a [FormaThemeExtension] so Forma components render.
 abstract final class PlantaoFacilTestTheme {
   static final ThemeData theme = ThemeData.light().copyWith(
-    extensions: const [
-      FormaThemeExtension(
+    extensions: [
+      const FormaThemeExtension(
         appBackground: Color(0xFFFFFFFF),
         cardBackground: Color(0xFFF5F5F5),
         primaryColor: Color(0xFF2E7D32),
@@ -114,6 +119,9 @@ abstract final class PlantaoFacilTestTheme {
         infoSurface: Color(0xFFE3F2FD),
         infoText: Color(0xFF1565C0),
       ),
+      // FormaButton (and other primitives) read typography from this
+      // extension; register it so the preview renders without throwing.
+      FormaTypographyExtension.fromFont('Inter'),
     ],
   );
 }
