@@ -285,26 +285,36 @@ melos run gallery:dev
 
 | Workflow | Trigger | What it does |
 |----------|---------|--------------|
-| **CI** | PR to `develop`/`main`, push to `develop` | format, analyze, test |
-| **Release & Publish** | manual (Actions → Run workflow) | CI gate, version bump on `develop`, tags + GitHub Release, publish to private pub, fast-forward `main` |
-| **Gallery Deploy** | a GitHub Release is published | build & deploy `forma_gallery` to GitHub Pages |
+| **CI** | PR to `develop`/`main`, push to `develop` | format, analyze, test (cached) |
+| **Release · Prepare** | manual | cut a `release/*` branch, `melos version` (independent bump + changelogs), open a review PR to `main` |
+| **Release · Publish** | manual | CI gate → publish only the changed packages (RC or final) → fast-forward `main` + `develop` |
+| **Gallery Deploy** | a (final) GitHub Release is published | build & deploy `forma_gallery` to GitHub Pages |
 
-### Release flow
+Packages are **versioned independently** (via `melos version`): only the
+packages that changed (and their dependents) are bumped and published. The
+publish step skips any version already on the server, so unchanged packages are
+never re-published.
 
-PRs land on `develop`; a release is launched on demand and promotes `develop`
-to `main` by fast-forward, so `main` is always an exact mirror of the last
-released `develop` (no divergence).
+### Release flow (two phases)
 
-1. Open a PR against **`develop`** and **squash-merge** it with a
-   [Conventional Commits](https://www.conventionalcommits.org/) title
-   (`feat:`, `fix:`, `refactor!:`…) — the title drives the version bump.
-2. When ready, go to **Actions → Release & Publish → Run workflow** (on
-   `develop`). Optional inputs: `dry_run` (compute & log only) and `version`
-   (force a specific version).
-3. The workflow computes the next version from the commits since the last tag,
-   bumps every package + internal constraint, commits it to `develop`, tags it,
-   creates a GitHub Release, publishes all packages to the private pub server,
-   and fast-forwards `main` to the released commit.
+PRs land on `develop` (squash-merge, Conventional Commits title — the title
+drives the per-package bump). A release goes out in two phases, and `main` is
+always a fast-forward mirror of the released `develop` (no divergence).
+
+1. **Prepare** — Actions → **Release · Prepare** → Run workflow (on `develop`).
+   Cuts `release/<label>`, runs `melos version` (bumps only the changed packages
+   + dependents, updates changelogs), and opens a PR `release/<label> → main`
+   for review.
+2. **Publish RC** *(optional, repeatable)* — Actions → **Release · Publish** with
+   `pre_release = true`. Publishes the changed packages as `x.y.z-rc.N` (a
+   pre-release) so apps can install and QA them. Does not touch `main`/`develop`.
+   RC consumers must pin the exact `x.y.z-rc.N` (a `^x.y.z` constraint won't pick
+   up a pre-release).
+3. **Finalize** — Actions → **Release · Publish** with `pre_release = false`.
+   Publishes the final versions, then fast-forwards **both** `main` and
+   `develop` to the release commit and deletes the release branch.
+
+Both phases accept `dry_run` to validate without side effects.
 
 ### Branch Strategy
 
@@ -312,10 +322,12 @@ released `develop` (no divergence).
 |--------|---------|
 | `main` | Released state. Updated **only** by the release workflow (fast-forward). No direct pushes/PRs. |
 | `develop` | Integration / next release. PRs target this branch; CI runs on every push. |
+| `release/*` | Short-lived release/freeze branch (one at a time). Reviewed via PR to `main`, then promoted by fast-forward. |
 | `feature/*` | Feature branches off `develop` |
 
-Hotfixes also go through `develop` (or a hotfix branch → `develop` → release) so
-`main` stays fast-forward-only.
+**Freeze:** avoid merging to `develop` while a `release/*` branch is open — the
+finalize step fast-forwards `develop`, which requires it not to have moved since
+the cut. Hotfixes also go through `develop` so `main` stays fast-forward-only.
 
 ## License
 

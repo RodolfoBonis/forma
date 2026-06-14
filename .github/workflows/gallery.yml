@@ -1,9 +1,9 @@
 name: Gallery Deploy
 
 on:
-  # Deploy whenever a release is published (the release workflow creates it).
-  # The fast-forward bump commit on main carries [skip ci], which would skip a
-  # push-triggered deploy — the release event avoids that.
+  # Deploy when a release is published. Release · Publish creates the umbrella
+  # GitHub Release (final = not a prerelease); RC releases are skipped by the
+  # job guard below. Also runnable on demand.
   release:
     types: [published]
   workflow_dispatch:
@@ -19,6 +19,8 @@ concurrency:
 jobs:
   build-and-deploy:
     name: Build & Deploy Gallery
+    # Skip release-candidate (prerelease) umbrella releases — deploy finals only.
+    if: ${{ github.event_name == 'workflow_dispatch' || !github.event.release.prerelease }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages

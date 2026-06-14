@@ -22,6 +22,13 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Cache pub-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: pub-${{ runner.os }}-
+
       - name: Install Melos
         run: dart pub global activate melos
 
