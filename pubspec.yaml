@@ -9,6 +9,7 @@ dev_dependencies:
 
 workspace:
   - packages/forma_foundation
+  - packages/forma_icons
   - packages/forma_core
   - packages/forma_theme_plantao_facil
   - packages/forma_theme_dominus
