@@ -1,0 +1,255 @@
+name: Release · Publish
+
+# Phase 2 of the release flow. Operates on a release/* branch (created by
+# Release · Prepare). Publishes only the packages that changed (independent
+# versions) — `already_published` skips the rest. Run with pre_release=true to
+# publish RCs (x.y.z-rc.N) for QA in apps; run with pre_release=false to publish
+# the final versions and fast-forward main + develop to the release commit.
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_branch:
+        description: "release/* branch (default: auto-detect the single one)"
+        type: string
+        default: ""
+      pre_release:
+        description: "Publish a release candidate (rc) instead of the final"
+        type: boolean
+        default: false
+      dry_run:
+        description: "Run the gate and log, without publishing or pushing"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  PUB_URL: https://pub.rodolfodebonis.com.br
+  INTERNAL_PKGS: forma_foundation forma_icons forma_ui forma_core
+  # Published packages, in topological (publish) order.
+  PUBLISH_ORDER: forma_foundation forma_icons forma_ui forma_core forma_theme_plantao_facil forma_theme_dominus
+
+jobs:
+  setup:
+    name: Resolve release branch
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.r.outputs.branch }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: r
+        run: |
+          set -euo pipefail
+          B="${{ inputs.release_branch }}"
+          if [ -z "$B" ]; then
+            B=$(git ls-remote --heads origin 'refs/heads/release/*' \
+                | sed -E 's#.*refs/heads/##')
+            COUNT=$(printf '%s' "$B" | grep -c . || true)
+            if [ "$COUNT" != "1" ]; then
+              echo "::error::Expected exactly one release/* branch; found: [$B]"
+              exit 1
+            fi
+          fi
+          echo "Resolved release branch: $B"
+          echo "branch=$B" >> "$GITHUB_OUTPUT"
+
+  ci:
+    name: CI gate
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.setup.outputs.branch }}
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Cache pub-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: pub-${{ runner.os }}-
+      - run: dart pub global activate melos
+      - run: melos bootstrap
+      - run: melos run ci
+
+  publish:
+    name: Publish packages
+    needs: [setup, ci]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.setup.outputs.branch }}
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Cache pub-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: pub-${{ runner.os }}-
+      - run: dart pub global activate melos
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Configure pub token
+        if: ${{ !inputs.dry_run }}
+        run: dart pub token add "$PUB_URL" --env-var PUB_TOKEN
+        env:
+          PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
+
+      - name: Publish changed packages (selective, topological)
+        env:
+          PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          PRE_RELEASE: ${{ inputs.pre_release }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          BRANCH: ${{ needs.setup.outputs.branch }}
+        run: |
+          set -euo pipefail
+          REWRITE="$(pwd)/scripts/rewrite_pub_deps.py"
+
+          pkg_version() { grep -E '^version:' "packages/$1/pubspec.yaml" | awk '{print $2}'; }
+
+          already_published() { # name, version
+            curl -fsSL -H "Authorization: Bearer ${PUB_TOKEN}" \
+              "${PUB_URL}/api/packages/$1" 2>/dev/null \
+              | grep -qF "\"version\":\"$2\""
+          }
+
+          # --- Pass 1: figure out which packages are part of this release ---
+          declare -A FINAL TARGET
+          IN_RELEASE=""
+          for pkg in $PUBLISH_ORDER; do
+            FINAL[$pkg]="$(pkg_version "$pkg")"
+            if already_published "$pkg" "${FINAL[$pkg]}"; then
+              continue   # unchanged / already published → skip
+            fi
+            IN_RELEASE="$IN_RELEASE $pkg"
+          done
+          if [ -z "${IN_RELEASE// }" ]; then
+            echo "Nothing to publish — every package version is already on the server."
+            exit 0
+          fi
+
+          # Release-wide RC number = 1 + highest existing rc across in-release pkgs.
+          RC_PINS=""
+          if [ "$PRE_RELEASE" = "true" ]; then
+            MAXN=0
+            for pkg in $IN_RELEASE; do
+              for n in $(git tag -l "${pkg}-v${FINAL[$pkg]}-rc.*" | sed -E "s/.*-rc\.//"); do
+                [ "$n" -gt "$MAXN" ] && MAXN="$n"
+              done
+            done
+            RCN=$((MAXN + 1))
+            for pkg in $IN_RELEASE; do
+              TARGET[$pkg]="${FINAL[$pkg]}-rc.${RCN}"
+              RC_PINS="$RC_PINS ${pkg}=${TARGET[$pkg]}"
+            done
+          else
+            for pkg in $IN_RELEASE; do TARGET[$pkg]="${FINAL[$pkg]}"; done
+          fi
+
+          echo "In this release:" >> "$GITHUB_STEP_SUMMARY"
+          for pkg in $IN_RELEASE; do echo "- \`$pkg\` → ${TARGET[$pkg]}" >> "$GITHUB_STEP_SUMMARY"; done
+
+          tag_if_absent() {
+            git rev-parse -q --verify "refs/tags/$1" >/dev/null \
+              && echo "tag $1 exists, skipping" || git tag "$1"
+          }
+
+          publish_pkg() { # name, version
+            local pkg="$1" ver="$2"
+            if already_published "$pkg" "$ver"; then
+              echo "$pkg $ver already published, skipping"; return
+            fi
+            echo "::group::Publishing ${pkg} ${ver}"
+            rm -rf "/tmp/pub_${pkg}"
+            cp -r "packages/${pkg}" "/tmp/pub_${pkg}"
+            rm -rf "/tmp/pub_${pkg}/.dart_tool" "/tmp/pub_${pkg}/build" \
+                   "/tmp/pub_${pkg}/coverage" "/tmp/pub_${pkg}/.flutter-plugins-dependencies"
+            find "/tmp/pub_${pkg}" -name '*.iml' -delete
+            (
+              cd "/tmp/pub_${pkg}"
+              sed -i -E "s/^version: .*/version: ${ver}/" pubspec.yaml
+              sed -i '/^resolution: workspace$/d' pubspec.yaml
+              RC_PINS="${RC_PINS}" python3 "$REWRITE" pubspec.yaml
+              dart pub publish --dry-run || true
+              if ! out="$(dart pub publish --force 2>&1)"; then
+                echo "${out}"
+                echo "${out}" | grep -qiE "already (exists|been (published|uploaded))|version already" \
+                  && echo "${pkg} ${ver} already published, continuing" || exit 1
+              else
+                echo "${out}"
+              fi
+            )
+            rm -rf "/tmp/pub_${pkg}"
+            echo "::endgroup::"
+          }
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "dry_run: would publish the packages listed above."
+            exit 0
+          fi
+
+          # --- Pass 2: publish in topological order, tag each ---
+          NOTES=""
+          for pkg in $PUBLISH_ORDER; do
+            ver="${TARGET[$pkg]:-}"; [ -n "$ver" ] || continue
+            publish_pkg "$pkg" "$ver"
+            tag_if_absent "${pkg}-v${ver}"
+            NOTES="${NOTES}- \`${pkg}\` ${ver}"$'\n'
+          done
+          git push --tags
+
+          # --- Umbrella GitHub Release (fires the gallery deploy on finals) ---
+          LABEL="${BRANCH#release/}"
+          if [ "$PRE_RELEASE" = "true" ]; then
+            REL_TAG="release-${LABEL}-rc.${RCN}"; PRE_FLAG="--prerelease"
+          else
+            REL_TAG="release-${LABEL}"; PRE_FLAG=""
+          fi
+          tag_if_absent "$REL_TAG"; git push --tags
+          if ! gh release view "$REL_TAG" >/dev/null 2>&1; then
+            printf 'Published packages:\n\n%s' "$NOTES" \
+              | gh release create "$REL_TAG" --title "$REL_TAG" $PRE_FLAG --notes-file -
+          fi
+
+  finalize:
+    name: Promote to main & develop
+    needs: [setup, publish]
+    if: ${{ !inputs.pre_release && !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.setup.outputs.branch }}
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+      - name: Fast-forward main & develop, delete release branch
+        run: |
+          set -euo pipefail
+          # The release branch = develop + the version bump (linear). Fast-forward
+          # both main and develop to it, so both mirror the release with no
+          # divergence. FF-only: fails on purpose if develop moved during the
+          # release (resolve by merging the release branch manually).
+          git push origin "HEAD:main"
+          git push origin "HEAD:develop"
+          git push origin --delete "${{ needs.setup.outputs.branch }}"

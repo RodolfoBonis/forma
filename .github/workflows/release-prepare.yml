@@ -1,0 +1,92 @@
+name: Release · Prepare
+
+# Phase 1 of the release flow. Run this on `develop` to cut a release branch:
+# `melos version` bumps only the changed packages (and their dependents) with
+# independent versions + changelogs, commits, and opens a PR to `main` for
+# review. Phase 2 (Release · Publish) publishes RCs and the final release.
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Release branch label (default: UTC timestamp)"
+        type: string
+        default: ""
+      dry_run:
+        description: "Compute & log the bump without creating the branch/PR"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Prepare release branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Cache pub-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: pub-${{ runner.os }}-
+
+      - name: Install Melos
+        run: dart pub global activate melos
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Cut release branch and version packages
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+
+          LABEL="${{ inputs.name }}"
+          [ -z "$LABEL" ] && LABEL="$(date -u +%Y-%m-%d-%H%M)"
+          BRANCH="release/${LABEL}"
+
+          git checkout -b "$BRANCH"
+
+          # Independent bump of changed packages (+ dependents) and changelogs.
+          # Commits the result (no tags — those are created at publish time).
+          OUT="$(melos version --no-git-tag-version --yes 2>&1)" || true
+          echo "$OUT"
+          if echo "$OUT" | grep -q "No packages were found"; then
+            echo "::error::No packages require versioning — nothing to release."
+            exit 1
+          fi
+
+          echo "### Release \`$BRANCH\`" >> "$GITHUB_STEP_SUMMARY"
+          git show --stat --oneline HEAD >> "$GITHUB_STEP_SUMMARY" || true
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "dry_run: would push $BRANCH and open a PR to main."
+            exit 0
+          fi
+
+          git push origin "$BRANCH"
+          gh pr create --base main --head "$BRANCH" \
+            --title "release: $BRANCH" \
+            --body "$(printf 'Release prepared by \`melos version\` (independent bump).\n\nReview the bumped packages + changelogs below, then run **Release · Publish** (pre_release for an RC, or final).\n\n%s' "$(git show --stat --oneline HEAD)")"
