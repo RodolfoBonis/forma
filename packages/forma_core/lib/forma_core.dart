@@ -2,19 +2,13 @@
 /// architecture for multi-app consistency.
 library forma_core;
 
-// Tokens
-export 'tokens/forma_spacing.dart';
-export 'tokens/forma_radius.dart';
-export 'tokens/forma_typography.dart';
-export 'tokens/forma_durations.dart';
-
-// Theme
-export 'theme/forma_theme_extension.dart';
-export 'theme/forma_theme.dart';
-
-// Utils
-export 'utils/forma_screen.dart';
-export 'utils/forma_accessibility.dart';
+// Foundation — re-exported for backward compatibility.
+//
+// Tokens, the theme engine, the FormaThemeExtension / FormaTypographyExtension
+// contracts, and utils now live in the `forma_foundation` package. Prefer
+// importing `package:forma_foundation/forma_foundation.dart` directly in new
+// code.
+export 'package:forma_foundation/forma_foundation.dart';
 
 // Components — Buttons
 export 'components/buttons/forma_button.dart';

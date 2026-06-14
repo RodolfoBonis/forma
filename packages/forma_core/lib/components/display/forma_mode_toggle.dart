@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/forma_theme_extension.dart';
-import '../../tokens/forma_radius.dart';
-import '../../tokens/forma_typography.dart';
+import 'package:forma_foundation/forma_foundation.dart';
 
 /// A two-option segmented toggle following Forma Design System specs.
 ///

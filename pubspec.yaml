@@ -8,11 +8,13 @@ dev_dependencies:
   melos: ^7.5.1
 
 workspace:
+  - packages/forma_foundation
   - packages/forma_core
   - packages/forma_theme_plantao_facil
   - packages/forma_theme_dominus
   - packages/_template
   - storybook
+  - forma_gallery
 
 melos:
   command:
@@ -63,6 +65,22 @@ melos:
         concurrency: 1
       packageFilters:
         scope: forma_storybook
+
+    gallery:dev:
+      description: Roda o forma_gallery (storybook próprio) no Chrome
+      run: flutter run -d chrome
+      exec:
+        concurrency: 1
+      packageFilters:
+        scope: forma_gallery
+
+    gallery:build:
+      description: Build do forma_gallery para deploy web
+      run: flutter build web --release
+      exec:
+        concurrency: 1
+      packageFilters:
+        scope: forma_gallery
 
     ci:
       description: Roda format + analyze + test (usado no CI/CD)

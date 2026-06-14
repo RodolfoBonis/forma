@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/forma_theme_extension.dart';
-import '../../tokens/forma_typography.dart';
+import 'package:forma_foundation/forma_foundation.dart';
 
 /// A single navigation item for [FormaBottomNav].
 class FormaNavItem {

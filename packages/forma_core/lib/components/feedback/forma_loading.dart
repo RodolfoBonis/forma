@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/forma_theme_extension.dart';
+import 'package:forma_foundation/forma_foundation.dart';
 
 /// A centered adaptive loading indicator following Forma Design System specs.
 ///

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/forma_theme_extension.dart';
-import '../../tokens/forma_radius.dart';
+import 'package:forma_foundation/forma_foundation.dart';
 
 /// The kind of proof a [FormaProofIcon] represents.
 enum FormaProofType {

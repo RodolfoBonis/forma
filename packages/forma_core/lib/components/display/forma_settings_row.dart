@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/forma_theme_extension.dart';
-import '../../tokens/forma_spacing.dart';
-import '../../tokens/forma_typography.dart';
+import 'package:forma_foundation/forma_foundation.dart';
 
 /// A tappable settings list row: leading icon, title, optional subtitle,
 /// and a trailing widget (a chevron by default).

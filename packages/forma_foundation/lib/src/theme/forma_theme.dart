@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'forma_theme_extension.dart';
+import 'forma_typography_extension.dart';
 
 /// Builds a complete [ThemeData] for Forma-based applications.
 ///
@@ -39,7 +40,10 @@ class FormaTheme {
       colorScheme: colorScheme,
       scaffoldBackgroundColor: extension.appBackground,
       textTheme: textTheme,
-      extensions: <ThemeExtension<dynamic>>[extension],
+      extensions: <ThemeExtension<dynamic>>[
+        extension,
+        FormaTypographyExtension.fromFont(fontFamily),
+      ],
     );
   }
 }

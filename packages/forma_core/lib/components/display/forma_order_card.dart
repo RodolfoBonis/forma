@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/forma_theme_extension.dart';
-import '../../tokens/forma_radius.dart';
-import '../../tokens/forma_spacing.dart';
-import '../../tokens/forma_typography.dart';
+import 'package:forma_foundation/forma_foundation.dart';
 
 /// A task / order card: a status row, title, description, a row of tag
 /// chips, and an optional trailing action.

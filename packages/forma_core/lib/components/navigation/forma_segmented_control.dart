@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/forma_theme_extension.dart';
-import '../../tokens/forma_durations.dart';
-import '../../tokens/forma_radius.dart';
-import '../../tokens/forma_spacing.dart';
-import '../../tokens/forma_typography.dart';
+import 'package:forma_foundation/forma_foundation.dart';
 
 /// A single segment within a [FormaSegmentedControl].
 class FormaSegment {

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/forma_theme_extension.dart';
-import '../../tokens/forma_radius.dart';
-import '../../tokens/forma_spacing.dart';
-import '../../tokens/forma_typography.dart';
+import 'package:forma_foundation/forma_foundation.dart';
 
 /// A styled time picker field that opens [showTimePicker] on tap.
 ///

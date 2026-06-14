@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/forma_theme_extension.dart';
+import 'package:forma_foundation/forma_foundation.dart';
 
 /// Applies an animated shimmer / shine effect over its [child].
 ///

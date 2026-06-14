@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/forma_theme_extension.dart';
-import '../../tokens/forma_durations.dart';
+import 'package:forma_foundation/forma_foundation.dart';
 
 /// A themed on/off switch.
 ///

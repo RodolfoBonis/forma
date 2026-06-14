@@ -13,13 +13,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_svg: ^2.0.17
-  google_fonts: ^6.2.1
+  forma_foundation: ^1.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  # Used only by test/flutter_test_config.dart to disable runtime font fetching.
+  google_fonts: ^6.2.1
 
 flutter:
   uses-material-design: true

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/forma_theme_extension.dart';
-import '../../tokens/forma_radius.dart';
-import '../../tokens/forma_spacing.dart';
+import 'package:forma_foundation/forma_foundation.dart';
 
 /// Visual variant for [FormaCard].
 enum FormaCardVariant {
