@@ -213,8 +213,12 @@ jobs:
 
           already_published() {
             # True when version $2 of package $1 is already on the pub server.
-            curl -fsSL "${PUB_URL}/api/packages/$1" 2>/dev/null \
-              | grep -qE "\"version\"[[:space:]]*:[[:space:]]*\"$2\""
+            # The metadata API requires auth; published versions appear as a
+            # bare "version":"X" (dependency constraints carry a caret, so they
+            # never match an exact "X").
+            curl -fsSL -H "Authorization: Bearer ${PUB_TOKEN}" \
+              "${PUB_URL}/api/packages/$1" 2>/dev/null \
+              | grep -qF "\"version\":\"$2\""
           }
 
           publish_pkg() {
@@ -232,11 +236,26 @@ jobs:
                    "/tmp/pub_${pkg}/coverage" \
                    "/tmp/pub_${pkg}/.flutter-plugins-dependencies"
             find "/tmp/pub_${pkg}" -name '*.iml' -delete
-            ( cd "/tmp/pub_${pkg}"
+            (
+              cd "/tmp/pub_${pkg}"
               sed -i '/^resolution: workspace$/d' pubspec.yaml
               python3 "$REWRITE" pubspec.yaml
-              dart pub publish --dry-run
-              dart pub publish --force
+              # Dry-run is for visibility only — never gate on it. Auto-versioned
+              # releases always warn that the CHANGELOG doesn't mention the new
+              # version, and `--dry-run` exits non-zero on any warning.
+              dart pub publish --dry-run || true
+              # Publish, tolerating an already-published version so a partial
+              # re-run heals instead of failing the whole release.
+              if ! out="$(dart pub publish --force 2>&1)"; then
+                echo "${out}"
+                if echo "${out}" | grep -qiE "already (exists|been (published|uploaded))|version already"; then
+                  echo "${pkg} ${NEW_VERSION} already published, continuing"
+                else
+                  exit 1
+                fi
+              else
+                echo "${out}"
+              fi
             )
             rm -rf "/tmp/pub_${pkg}"
             echo "::endgroup::"
