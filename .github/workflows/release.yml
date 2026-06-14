@@ -130,10 +130,14 @@ jobs:
         env:
           NEW_VERSION: ${{ steps.version.outputs.new_version }}
         run: |
-          if git diff --quiet; then
-            echo "No version change detected; skipping bump commit."
+          # Stage only the pubspec.yaml files we may have changed (never the
+          # pubspec.lock that `melos bootstrap` dirties), then commit only if
+          # something is actually staged. On a re-release at the same version
+          # there is nothing to commit and we skip cleanly.
+          git add -- $(git ls-files '*pubspec.yaml')
+          if git diff --cached --quiet; then
+            echo "No pubspec changes to commit; skipping bump commit."
           else
-            git add packages/*/pubspec.yaml
             git commit -m "chore(release): v${NEW_VERSION} [skip ci]"
             git push origin HEAD:main
           fi
