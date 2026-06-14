@@ -155,16 +155,30 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEW_VERSION: ${{ steps.version.outputs.new_version }}
         run: |
+          set -euo pipefail
+
+          tag_if_absent() {
+            if git rev-parse -q --verify "refs/tags/$1" >/dev/null; then
+              echo "tag $1 already exists, skipping"
+            else
+              git tag "$1"
+            fi
+          }
+
           for pkg in forma_foundation forma_icons forma_ui forma_core \
                      forma_theme_plantao_facil forma_theme_dominus; do
-            git tag "${pkg}-v${NEW_VERSION}"
+            tag_if_absent "${pkg}-v${NEW_VERSION}"
           done
-          git tag "v${NEW_VERSION}"
+          tag_if_absent "v${NEW_VERSION}"
           git push --tags
 
-          gh release create "v${NEW_VERSION}" \
-            --title "v${NEW_VERSION}" \
-            --notes-file /tmp/release_notes.md
+          if gh release view "v${NEW_VERSION}" >/dev/null 2>&1; then
+            echo "release v${NEW_VERSION} already exists, skipping"
+          else
+            gh release create "v${NEW_VERSION}" \
+              --title "v${NEW_VERSION}" \
+              --notes-file /tmp/release_notes.md
+          fi
 
       - name: Configure pub token
         run: dart pub token add https://pub.rodolfodebonis.com.br --env-var PUB_TOKEN
@@ -183,11 +197,27 @@ jobs:
 
           REWRITE="$(pwd)/scripts/rewrite_pub_deps.py"
 
+          already_published() {
+            # True when version $2 of package $1 is already on the pub server.
+            curl -fsSL "${PUB_URL}/api/packages/$1" 2>/dev/null \
+              | grep -qE "\"version\"[[:space:]]*:[[:space:]]*\"$2\""
+          }
+
           publish_pkg() {
             local pkg="$1"
+            if already_published "${pkg}" "${NEW_VERSION}"; then
+              echo "${pkg} ${NEW_VERSION} already published, skipping"
+              return
+            fi
             echo "::group::Publishing ${pkg}"
             rm -rf "/tmp/pub_${pkg}"
             cp -r "packages/${pkg}" "/tmp/pub_${pkg}"
+            # Copying to /tmp loses the .gitignore context, so strip local
+            # build/tooling artifacts to keep the published archive lean.
+            rm -rf "/tmp/pub_${pkg}/.dart_tool" "/tmp/pub_${pkg}/build" \
+                   "/tmp/pub_${pkg}/coverage" \
+                   "/tmp/pub_${pkg}/.flutter-plugins-dependencies"
+            find "/tmp/pub_${pkg}" -name '*.iml' -delete
             ( cd "/tmp/pub_${pkg}"
               sed -i '/^resolution: workspace$/d' pubspec.yaml
               python3 "$REWRITE" pubspec.yaml

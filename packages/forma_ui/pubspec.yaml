@@ -5,6 +5,7 @@ description: >
   contract from forma_foundation and icons from forma_icons.
 version: 2.0.0
 publish_to: https://pub.rodolfodebonis.com.br
+repository: https://github.com/RodolfoBonis/forma
 resolution: workspace
 
 environment:
