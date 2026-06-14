@@ -1,10 +1,10 @@
-name: Storybook Deploy
+name: Gallery Deploy
 
 on:
   push:
     branches: [main]
     paths:
-      - 'storybook/**'
+      - 'forma_gallery/**'
       - 'packages/**'
 
 permissions:
@@ -12,12 +12,12 @@ permissions:
   id-token: write
 
 concurrency:
-  group: storybook
+  group: gallery
   cancel-in-progress: true
 
 jobs:
   build-and-deploy:
-    name: Build & Deploy Storybook
+    name: Build & Deploy Gallery
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -36,8 +36,8 @@ jobs:
       - name: Bootstrap
         run: melos bootstrap
 
-      - name: Build Storybook
-        run: melos run storybook:build
+      - name: Build Gallery
+        run: melos run gallery:build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -45,7 +45,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: storybook/build/web
+          path: forma_gallery/build/web
 
       - name: Deploy to GitHub Pages
         id: deployment

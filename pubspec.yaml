@@ -15,7 +15,6 @@ workspace:
   - packages/forma_theme_plantao_facil
   - packages/forma_theme_dominus
   - packages/_template
-  - storybook
   - forma_gallery
 
 melos:
@@ -51,22 +50,6 @@ melos:
         concurrency: 1
       packageFilters:
         scope: forma_core
-
-    storybook:dev:
-      description: Roda o Storybook no Chrome
-      run: flutter run -d chrome
-      exec:
-        concurrency: 1
-      packageFilters:
-        scope: forma_storybook
-
-    storybook:build:
-      description: Build do Storybook para deploy web
-      run: flutter build web --release
-      exec:
-        concurrency: 1
-      packageFilters:
-        scope: forma_storybook
 
     gallery:dev:
       description: Roda o forma_gallery (storybook próprio) no Chrome
