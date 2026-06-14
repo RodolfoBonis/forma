@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forma_core/forma_core.dart';
+import 'package:forma_ui/forma_ui.dart';
 
 /// A minimal [FormaThemeExtension] for widget tests.
 const FormaThemeExtension testExtension = FormaThemeExtension(

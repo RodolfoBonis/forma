@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:forma_foundation/forma_foundation.dart';
-import 'forma_avatar.dart';
+import 'package:forma_ui/forma_ui.dart';
 
 /// A person chip showing an avatar initial and name,
 /// following Forma Design System specs.

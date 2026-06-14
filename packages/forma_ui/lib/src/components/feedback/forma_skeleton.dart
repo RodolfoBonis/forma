@@ -63,16 +63,16 @@ class _CircleSkeleton extends FormaSkeleton {
 class _LineSkeleton extends FormaSkeleton {
   const _LineSkeleton({
     super.key,
-    double? width,
-    double height = FormaSpacing.base,
-  }) : super._(width: width, height: height, borderRadius: height / 2);
+    super.width,
+    super.height = FormaSpacing.base,
+  }) : super._(borderRadius: height / 2);
 }
 
 class _BoxSkeleton extends FormaSkeleton {
   const _BoxSkeleton({
     super.key,
-    double? width,
+    super.width,
     double? height,
-    double borderRadius = 12,
-  }) : super._(width: width, height: height ?? 80, borderRadius: borderRadius);
+    super.borderRadius = 12,
+  }) : super._(height: height ?? 80);
 }

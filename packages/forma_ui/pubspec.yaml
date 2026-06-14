@@ -1,0 +1,28 @@
+name: forma_ui
+description: >
+  Forma Design System — brand-agnostic UI primitives (buttons, inputs, cards,
+  navigation, feedback, overlays). Consumes design tokens and the theme
+  contract from forma_foundation and icons from forma_icons.
+version: 1.2.0
+publish_to: https://pub.rodolfodebonis.com.br
+resolution: workspace
+
+environment:
+  sdk: '>=3.11.0 <4.0.0'
+  flutter: '>=3.41.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  forma_foundation: ^1.2.0
+  forma_icons: ^1.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  # Used only by test/flutter_test_config.dart to disable runtime font fetching.
+  google_fonts: ^6.2.1
+
+flutter:
+  uses-material-design: true

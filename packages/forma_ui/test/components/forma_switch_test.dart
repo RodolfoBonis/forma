@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:forma_core/forma_core.dart';
+import 'package:forma_ui/forma_ui.dart';
 
 import '../test_theme.dart';
 

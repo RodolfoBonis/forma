@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:forma_core/forma_core.dart';
+import 'package:forma_ui/forma_ui.dart';
 
 import '../test_theme.dart';
 
@@ -65,15 +65,6 @@ void main() {
 
       final activeLabel = tester.widget<Text>(find.text('Ordens'));
       expect(activeLabel.style?.color, dom);
-    });
-  });
-
-  group('FormaProofIcon', () {
-    testWidgets('renders the icon for its type', (tester) async {
-      await tester.pumpWidget(
-        wrapForTest(const FormaProofIcon(type: FormaProofType.check)),
-      );
-      expect(find.byIcon(Icons.check), findsOneWidget);
     });
   });
 
