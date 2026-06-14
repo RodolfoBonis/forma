@@ -11,9 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  forma_core: ^1.0.0
-  forma_theme_plantao_facil: ^1.0.0
-  forma_theme_dominus: ^1.0.0
+  forma_core: ^2.0.0
+  forma_theme_plantao_facil: ^2.0.0
+  forma_theme_dominus: ^2.0.0
 
 dev_dependencies:
   flutter_test:

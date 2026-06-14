@@ -114,6 +114,16 @@ jobs:
             packages/forma_theme_dominus/pubspec.yaml; do
             sed -i -E "s/^version: .*/version: ${NEW_VERSION}/" "$f"
           done
+
+          # Keep internal dependency constraints in sync with the new version so
+          # the melos workspace keeps resolving — a major bump would otherwise
+          # leave consumers pinned to ^old and break `melos bootstrap`.
+          for f in $(git ls-files '*pubspec.yaml'); do
+            for name in forma_foundation forma_icons forma_ui forma_core \
+                        forma_theme_plantao_facil forma_theme_dominus; do
+              sed -i -E "s|^(  ${name}): \^[0-9].*|\1: ^${NEW_VERSION}|" "$f"
+            done
+          done
           git diff --stat
 
       - name: Commit version bump

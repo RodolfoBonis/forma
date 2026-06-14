@@ -12,7 +12,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  forma_foundation: ^1.2.0
+  forma_foundation: ^2.0.0
 
 dev_dependencies:
   flutter_test:
