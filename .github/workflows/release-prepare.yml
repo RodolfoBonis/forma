@@ -68,6 +68,7 @@ jobs:
           BRANCH="release/${LABEL}"
 
           git checkout -b "$BRANCH"
+          melos bootstrap
 
           # Independent bump of changed packages (+ dependents) and changelogs.
           # Commits the result (no tags — those are created at publish time).
