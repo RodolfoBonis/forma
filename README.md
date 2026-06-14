@@ -260,6 +260,75 @@ cd forma
 melos bootstrap
 ```
 
+### Workflow
+
+The full lifecycle, from a change to a published release:
+
+```
+feature/* ─PR(squash, conventional)→ develop ──Release · Prepare──▶ release/<label> ──┐
+   (1 review + CI)                    (trunk)   (melos version: bump only what changed)│
+                                                                                       │
+                       Release · Publish (pre_release) ── x.y.z-rc.N ── QA in apps      │ (review PR)
+                                                                                       ▼
+                       Release · Publish (final) ── publish changed ── FF main+develop ─▶ main
+```
+
+**1 — Branch & code.** Branch off `develop`:
+
+```bash
+git switch develop && git pull
+git switch -c feature/my-change
+melos bootstrap            # after pulling dependency changes
+```
+
+Put code in the right layer (see [Architecture](#architecture)):
+
+| You're adding… | Goes in |
+|----------------|---------|
+| a token, theme-engine change, or color/typography contract | `forma_foundation` |
+| a semantic icon key or SVG-registry feature | `forma_icons` |
+| a **brand-agnostic** component (reads only `FormaThemeExtension` / `context.formaTypography`) | `forma_ui` |
+| brand colors / fonts for a variant | `forma_theme_<brand>` |
+| an **app-specific** (domain) widget or brand color | the **app's** repo (see `handoff/`), not Forma |
+
+When adding a `forma_ui` component, follow the existing pattern (single file per
+component, enum variants + named constructors, colors from `FormaThemeExtension`,
+text from `context.formaTypography`), add a story under
+`forma_gallery/lib/stories/…` and register it in
+`forma_gallery/lib/gallery_catalog.dart`, and add a widget test. New themes:
+`melos run new:theme -- --name=<brand>`, then register it in
+`forma_gallery/lib/gallery_themes.dart`.
+
+**2 — Check locally.** `forma_ui` must keep brand colors out and typography
+theme-driven:
+
+```bash
+melos run ci                                   # format + analyze + test
+grep -rn "Color(0x" packages/forma_ui/lib      # only justified neutrals
+grep -rn "FormaTypography\." packages/forma_ui/lib   # expect 0 (use context.formaTypography)
+melos run gallery:dev                          # eyeball the component/theme
+```
+
+**3 — Commit (Conventional Commits).** The commit/PR title drives the per-package
+version bump, so it must follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+| Prefix | Bump | Example |
+|--------|------|---------|
+| `fix:` | patch | `fix(ui): correct FormaButton disabled color` |
+| `feat:` | minor | `feat(icons): add FormaIconKey.share` |
+| `feat!:` / `BREAKING CHANGE:` | major | `refactor(ui)!: rename FormaBadgeVariant values` |
+
+Use the package as the scope (`feat(foundation): …`). `melos version` attributes
+the bump to the package whose files changed and patches its dependents.
+
+**4 — Open a PR to `develop`.** CI (format/analyze/test) runs on the PR; it needs
+**1 review** and green CI. **Squash-merge** with a Conventional Commits title
+(the squash title is what versioning reads).
+
+**5 — Release** when ready — see [Release flow](#release-flow-two-phases): run
+**Release · Prepare**, optionally publish **RC**s for QA, then **Finalize**.
+Only the packages that changed are bumped and published.
+
 ### Commands
 
 | Command | Description |
