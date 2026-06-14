@@ -285,25 +285,37 @@ melos run gallery:dev
 
 | Workflow | Trigger | What it does |
 |----------|---------|--------------|
-| **CI** | PR/push to `develop` | format, analyze, test |
-| **Release & Publish** | push to `main` | CI check, git tags, GitHub Release, publish to private pub |
-| **Gallery Deploy** | push to `main` | build & deploy `forma_gallery` to GitHub Pages |
+| **CI** | PR to `develop`/`main`, push to `develop` | format, analyze, test |
+| **Release & Publish** | manual (Actions → Run workflow) | CI gate, version bump on `develop`, tags + GitHub Release, publish to private pub, fast-forward `main` |
+| **Gallery Deploy** | a GitHub Release is published | build & deploy `forma_gallery` to GitHub Pages |
 
-### Versioning
+### Release flow
 
-Packages follow [semver](https://semver.org/). To release:
+PRs land on `develop`; a release is launched on demand and promotes `develop`
+to `main` by fast-forward, so `main` is always an exact mirror of the last
+released `develop` (no divergence).
 
-1. Bump `version:` in the package's `pubspec.yaml`
-2. Merge to `main`
-3. The Release workflow creates tags, a GitHub Release with changelog, and publishes to the private pub server automatically
+1. Open a PR against **`develop`** and **squash-merge** it with a
+   [Conventional Commits](https://www.conventionalcommits.org/) title
+   (`feat:`, `fix:`, `refactor!:`…) — the title drives the version bump.
+2. When ready, go to **Actions → Release & Publish → Run workflow** (on
+   `develop`). Optional inputs: `dry_run` (compute & log only) and `version`
+   (force a specific version).
+3. The workflow computes the next version from the commits since the last tag,
+   bumps every package + internal constraint, commits it to `develop`, tags it,
+   creates a GitHub Release, publishes all packages to the private pub server,
+   and fast-forwards `main` to the released commit.
 
 ### Branch Strategy
 
 | Branch | Purpose |
 |--------|---------|
-| `main` | Production releases. Merges trigger release + publish. |
-| `develop` | Integration branch. CI runs on every push. |
+| `main` | Released state. Updated **only** by the release workflow (fast-forward). No direct pushes/PRs. |
+| `develop` | Integration / next release. PRs target this branch; CI runs on every push. |
 | `feature/*` | Feature branches off `develop` |
+
+Hotfixes also go through `develop` (or a hotfix branch → `develop` → release) so
+`main` stays fast-forward-only.
 
 ## License
 
