@@ -1,11 +1,12 @@
 name: Gallery Deploy
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'forma_gallery/**'
-      - 'packages/**'
+  # Deploy whenever a release is published (the release workflow creates it).
+  # The fast-forward bump commit on main carries [skip ci], which would skip a
+  # push-triggered deploy — the release event avoids that.
+  release:
+    types: [published]
+  workflow_dispatch:
 
 permissions:
   pages: write

@@ -1,8 +1,16 @@
 name: Release & Publish
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Compute and log the release without publishing or pushing"
+        type: boolean
+        default: false
+      version:
+        description: "Force a version (e.g. 2.1.0); empty = derive from conventional commits"
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -14,10 +22,11 @@ concurrency:
 jobs:
   ci:
     name: CI Check
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: develop
 
       - uses: subosito/flutter-action@v2
         with:
@@ -40,8 +49,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: develop
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Prefer a release PAT (an admin's) so pushes to the protected
+          # develop/main branches bypass the PR requirement; fall back to the
+          # default token when RELEASE_TOKEN isn't set.
+          token: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
 
       - uses: subosito/flutter-action@v2
         with:
@@ -61,6 +74,9 @@ jobs:
 
       - name: Compute next version from conventional commits
         id: version
+        env:
+          FORCED_VERSION: ${{ inputs.version }}
+          DRY_RUN: ${{ inputs.dry_run }}
         run: |
           set -euo pipefail
 
@@ -74,24 +90,30 @@ jobs:
           fi
           echo "Last tag: ${LAST_TAG:-<none>} (version ${LAST_VERSION})"
 
-          COMMITS=$(git log "$RANGE" --pretty=format:'%s%n%b%n---' --no-merges || true)
+          if [ -n "${FORCED_VERSION}" ]; then
+            NEW_VERSION="${FORCED_VERSION}"
+            BUMP="forced"
+            echo "Forced version: $NEW_VERSION"
+          else
+            COMMITS=$(git log "$RANGE" --pretty=format:'%s%n%b%n---' --no-merges || true)
 
-          BUMP="patch"
-          if echo "$COMMITS" | grep -qiE '(^|\s)BREAKING[-_ ]CHANGE:' \
-             || echo "$COMMITS" | grep -qE '^[a-zA-Z]+(\([^)]+\))?!:'; then
-            BUMP="major"
-          elif echo "$COMMITS" | grep -qE '^feat(\([^)]+\))?:'; then
-            BUMP="minor"
+            BUMP="patch"
+            if echo "$COMMITS" | grep -qiE '(^|\s)BREAKING[-_ ]CHANGE:' \
+               || echo "$COMMITS" | grep -qE '^[a-zA-Z]+(\([^)]+\))?!:'; then
+              BUMP="major"
+            elif echo "$COMMITS" | grep -qE '^feat(\([^)]+\))?:'; then
+              BUMP="minor"
+            fi
+            echo "Detected bump: $BUMP"
+
+            IFS='.' read -r MAJOR MINOR PATCH <<< "$LAST_VERSION"
+            case "$BUMP" in
+              major) NEW_VERSION="$((MAJOR+1)).0.0" ;;
+              minor) NEW_VERSION="${MAJOR}.$((MINOR+1)).0" ;;
+              patch) NEW_VERSION="${MAJOR}.${MINOR}.$((PATCH+1))" ;;
+            esac
           fi
-          echo "Detected bump: $BUMP"
-
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$LAST_VERSION"
-          case "$BUMP" in
-            major) NEW_VERSION="$((MAJOR+1)).0.0" ;;
-            minor) NEW_VERSION="${MAJOR}.$((MINOR+1)).0" ;;
-            patch) NEW_VERSION="${MAJOR}.${MINOR}.$((PATCH+1))" ;;
-          esac
-          echo "New version: $NEW_VERSION"
+          echo "New version: $NEW_VERSION (dry_run=${DRY_RUN})"
 
           echo "last_version=$LAST_VERSION" >> $GITHUB_OUTPUT
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
@@ -127,6 +149,7 @@ jobs:
           git diff --stat
 
       - name: Commit version bump
+        if: ${{ !inputs.dry_run }}
         env:
           NEW_VERSION: ${{ steps.version.outputs.new_version }}
         run: |
@@ -139,7 +162,7 @@ jobs:
             echo "No pubspec changes to commit; skipping bump commit."
           else
             git commit -m "chore(release): v${NEW_VERSION} [skip ci]"
-            git push origin HEAD:main
+            git push origin HEAD:develop
           fi
 
       - name: Generate release notes
@@ -165,8 +188,9 @@ jobs:
           git log $RANGE --pretty=format:"- %s" --no-merges >> /tmp/release_notes.md
 
       - name: Create Git tag & GitHub Release
+        if: ${{ !inputs.dry_run }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
           NEW_VERSION: ${{ steps.version.outputs.new_version }}
         run: |
           set -euo pipefail
@@ -195,11 +219,13 @@ jobs:
           fi
 
       - name: Configure pub token
+        if: ${{ !inputs.dry_run }}
         run: dart pub token add https://pub.rodolfodebonis.com.br --env-var PUB_TOKEN
         env:
           PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
 
       - name: Publish packages (topological order)
+        if: ${{ !inputs.dry_run }}
         env:
           PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
           NEW_VERSION: ${{ steps.version.outputs.new_version }}
@@ -265,3 +291,12 @@ jobs:
                      forma_theme_plantao_facil forma_theme_dominus; do
             publish_pkg "$pkg"
           done
+
+      - name: Fast-forward main to the released develop
+        if: ${{ !inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          # main mirrors the released develop. This is a fast-forward: main must
+          # be an ancestor of HEAD (develop). If it isn't, the push fails on
+          # purpose — it means main received changes outside this release flow.
+          git push origin HEAD:main
