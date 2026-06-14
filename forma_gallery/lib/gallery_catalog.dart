@@ -7,19 +7,13 @@ import 'stories/components/display/forma_badge.story.dart';
 import 'stories/components/display/forma_card.story.dart';
 import 'stories/components/display/forma_chip.story.dart';
 import 'stories/components/display/forma_mode_toggle.story.dart';
-import 'stories/components/display/forma_order_card.story.dart';
-import 'stories/components/display/forma_person_chip.story.dart';
-import 'stories/components/display/forma_proof_icon.story.dart';
-import 'stories/components/display/forma_role_badge.story.dart';
 import 'stories/components/display/forma_settings_row.story.dart';
 import 'stories/components/display/forma_stat_tile.story.dart';
 import 'stories/components/display/forma_status_badge.story.dart';
 import 'stories/components/display/forma_timeline.story.dart';
-import 'stories/components/display/forma_whatsapp_preview.story.dart';
 import 'stories/components/feedback/forma_alert_banner.story.dart';
 import 'stories/components/feedback/forma_loading.story.dart';
 import 'stories/components/feedback/forma_push_notification.story.dart';
-import 'stories/components/feedback/forma_urgency_header.story.dart';
 import 'stories/components/inputs/forma_select_chip.story.dart';
 import 'stories/components/inputs/forma_switch.story.dart';
 import 'stories/components/inputs/forma_text_field.story.dart';
@@ -70,14 +64,9 @@ final List<GalleryNode> galleryRoot = [
           formaBadgeComponent(),
           formaCardComponent(),
           formaModeToggleComponent(),
-          formaPersonChipComponent(),
           formaTimelineComponent(),
-          formaWhatsAppPreviewComponent(),
           formaStatTileComponent(),
           formaSettingsRowComponent(),
-          formaRoleBadgeComponent(),
-          formaOrderCardComponent(),
-          formaProofIconComponent(),
           formaChipComponent(),
           formaStatusBadgeComponent(),
         ],
@@ -96,7 +85,6 @@ final List<GalleryNode> galleryRoot = [
           formaAlertBannerComponent(),
           formaLoadingComponent(),
           formaPushNotificationComponent(),
-          formaUrgencyHeaderComponent(),
         ],
       ),
       GalleryFolder(

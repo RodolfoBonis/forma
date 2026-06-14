@@ -2,28 +2,29 @@ import 'package:flutter/material.dart';
 
 import 'package:forma_foundation/forma_foundation.dart';
 
-/// Visual variant for [FormaBadge].
+/// Semantic visual variant for [FormaBadge].
+///
+/// Variants map to [FormaThemeExtension] semantic color pairs so a badge
+/// follows the active theme. Apps map their domain statuses (e.g. "confirmada",
+/// "ao vivo") onto these generic variants.
 enum FormaBadgeVariant {
-  /// Green — confirmed / success status.
-  confirmada,
+  /// Green — success / confirmed status.
+  success,
 
-  /// Yellow — pending / awaiting status.
-  pendente,
+  /// Yellow — warning / pending status.
+  warning,
 
-  /// Red — cancelled / error status.
-  cancelada,
+  /// Red — error / cancelled status.
+  error,
 
-  /// Purple — official / institutional status.
-  oficial,
+  /// Blue — informational / institutional status.
+  info,
 
-  /// Dark — live / broadcasting status.
-  aoVivo,
+  /// Gray — neutral / inactive status.
+  neutral,
 
-  /// Yellow — awaiting action.
-  aguardando,
-
-  /// Blue / primary — active status.
-  ativo,
+  /// Brand — active / highlighted status.
+  primary,
 }
 
 /// A small status pill showing a colored label.
@@ -74,28 +75,27 @@ class FormaBadge extends StatelessWidget {
 
   _BadgeColors _resolveColors(FormaThemeExtension ext) {
     return switch (variant) {
-      FormaBadgeVariant.confirmada => _BadgeColors(
+      FormaBadgeVariant.success => _BadgeColors(
         background: ext.successSurface,
         foreground: ext.successText,
       ),
-      FormaBadgeVariant.pendente ||
-      FormaBadgeVariant.aguardando => _BadgeColors(
+      FormaBadgeVariant.warning => _BadgeColors(
         background: ext.warningSurface,
         foreground: ext.warningText,
       ),
-      FormaBadgeVariant.cancelada => _BadgeColors(
+      FormaBadgeVariant.error => _BadgeColors(
         background: ext.errorSurface,
         foreground: ext.errorText,
       ),
-      FormaBadgeVariant.oficial => _BadgeColors(
-        background: ext.secondarySurface,
-        foreground: ext.secondaryColor,
+      FormaBadgeVariant.info => _BadgeColors(
+        background: ext.infoSurface,
+        foreground: ext.infoText,
       ),
-      FormaBadgeVariant.aoVivo => const _BadgeColors(
-        background: Color(0xFF1A1840),
-        foreground: Color(0xFFB5ABFF),
+      FormaBadgeVariant.neutral => _BadgeColors(
+        background: ext.cardBackground,
+        foreground: ext.textMuted,
       ),
-      FormaBadgeVariant.ativo => _BadgeColors(
+      FormaBadgeVariant.primary => _BadgeColors(
         background: ext.primarySurface,
         foreground: ext.primaryColor,
       ),

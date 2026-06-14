@@ -28,7 +28,7 @@ GalleryComponent formaBadgeComponent() {
       codeSnippet: '''
 FormaBadge(
   label: 'Confirmada',
-  variant: FormaBadgeVariant.confirmada,
+  variant: FormaBadgeVariant.success,
 )''',
     ),
     useCases: [
@@ -38,7 +38,7 @@ FormaBadge(
           label: 'Variant',
           options: FormaBadgeVariant.values,
           labelBuilder: (v) => v.name,
-          initialOption: FormaBadgeVariant.confirmada,
+          initialOption: FormaBadgeVariant.success,
         );
 
         return Center(

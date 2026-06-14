@@ -8,9 +8,9 @@ GalleryComponent formaButtonComponent() {
     'FormaButton',
     docs: const ComponentDocs(
       description:
-          'Primary action button with brand variants (primary, secondary, '
-          'danger, ghost, WhatsApp, safeword) and a loading state. Use the '
-          'most prominent variant for the single primary action on a screen.',
+          'Action button with semantic variants (primary, secondary, danger, '
+          'ghost, disabled) and a loading state. Use the most prominent variant '
+          'for the single primary action on a screen.',
       props: [
         PropDoc('label', 'String', required: true, description: 'Button text.'),
         PropDoc(

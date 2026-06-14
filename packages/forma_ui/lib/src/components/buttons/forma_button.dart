@@ -16,12 +16,6 @@ enum FormaButtonVariant {
   /// Ghost / subtle action — tinted primary surface.
   ghost,
 
-  /// WhatsApp CTA — filled with WhatsApp green.
-  whatsApp,
-
-  /// Safeword — highest-priority stop action, filled with a loud red.
-  safeword,
-
   /// Visually and functionally disabled.
   disabled,
 }
@@ -82,26 +76,6 @@ class FormaButton extends StatelessWidget {
     super.key,
   }) : variant = FormaButtonVariant.ghost;
 
-  /// WhatsApp CTA button.
-  const FormaButton.whatsApp({
-    required this.label,
-    this.onPressed,
-    this.isLoading = false,
-    this.width,
-    this.icon,
-    super.key,
-  }) : variant = FormaButtonVariant.whatsApp;
-
-  /// Safeword stop button — loud red, highest-priority action.
-  const FormaButton.safeword({
-    required this.label,
-    this.onPressed,
-    this.isLoading = false,
-    this.width,
-    this.icon,
-    super.key,
-  }) : variant = FormaButtonVariant.safeword;
-
   /// Button text.
   final String label;
 
@@ -123,8 +97,6 @@ class FormaButton extends StatelessWidget {
 
   static const double _height = 56;
   static const double _minTouchTarget = 48;
-  static const Color _whatsAppGreen = Color(0xFF25D366);
-  static const Color _safewordRed = Color(0xFFFF3B30);
 
   @override
   Widget build(BuildContext context) {
@@ -217,14 +189,6 @@ class FormaButton extends StatelessWidget {
         background: ext.primarySurface,
         foreground: ext.primaryColor,
         borderColor: ext.primaryBorder,
-      ),
-      FormaButtonVariant.whatsApp => const _ButtonColors(
-        background: _whatsAppGreen,
-        foreground: Colors.white,
-      ),
-      FormaButtonVariant.safeword => const _ButtonColors(
-        background: _safewordRed,
-        foreground: Colors.white,
       ),
       FormaButtonVariant.disabled => _ButtonColors(
         background: ext.border,

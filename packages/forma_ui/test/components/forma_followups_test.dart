@@ -5,24 +5,6 @@ import 'package:forma_ui/forma_ui.dart';
 import '../test_theme.dart';
 
 void main() {
-  group('FormaButton.safeword', () {
-    testWidgets('renders a loud-red filled button', (tester) async {
-      var tapped = false;
-      await tester.pumpWidget(
-        wrapForTest(
-          FormaButton.safeword(
-            label: 'Safeword',
-            onPressed: () => tapped = true,
-          ),
-        ),
-      );
-
-      expect(find.text('Safeword'), findsOneWidget);
-      await tester.tap(find.byType(FormaButton));
-      expect(tapped, isTrue);
-    });
-  });
-
   group('FormaAvatar role ring', () {
     testWidgets('wraps the avatar with an outer ring when ringColor is set', (
       tester,
