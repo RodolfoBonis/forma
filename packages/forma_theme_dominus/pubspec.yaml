@@ -1,7 +1,8 @@
 name: forma_theme_dominus
 description: Dominus (dark) theme variant for the Forma Design System.
-version: 1.4.0
+version: 2.0.0
 publish_to: https://pub.rodolfodebonis.com.br
+repository: https://github.com/RodolfoBonis/forma
 resolution: workspace
 
 environment:
@@ -11,7 +12,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  forma_foundation: ^1.2.0
+  forma_foundation: ^2.0.0
 
 dev_dependencies:
   flutter_test:
