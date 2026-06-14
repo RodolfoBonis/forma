@@ -1,60 +1,13 @@
-/// Forma Design System — shared Flutter components, tokens, and theme
-/// architecture for multi-app consistency.
+/// Forma Design System — compatibility facade.
+///
+/// Re-exports the layered packages so existing imports of `forma_core` keep
+/// working. New code should depend on the specific layers directly:
+/// `forma_foundation` (tokens + theme), `forma_ui` (primitives) and
+/// `forma_icons`.
 library forma_core;
 
-// Tokens
-export 'tokens/forma_spacing.dart';
-export 'tokens/forma_radius.dart';
-export 'tokens/forma_typography.dart';
-export 'tokens/forma_durations.dart';
+// Foundation — tokens, theme engine, color & typography contracts, utils.
+export 'package:forma_foundation/forma_foundation.dart';
 
-// Theme
-export 'theme/forma_theme_extension.dart';
-export 'theme/forma_theme.dart';
-
-// Utils
-export 'utils/forma_screen.dart';
-export 'utils/forma_accessibility.dart';
-
-// Components — Buttons
-export 'components/buttons/forma_button.dart';
-export 'components/buttons/forma_icon_button.dart';
-
-// Components — Inputs
-export 'components/inputs/forma_text_field.dart';
-export 'components/inputs/forma_time_picker.dart';
-export 'components/inputs/forma_select_chip.dart';
-export 'components/inputs/forma_switch.dart';
-
-// Components — Display
-export 'components/display/forma_avatar.dart';
-export 'components/display/forma_badge.dart';
-export 'components/display/forma_card.dart';
-export 'components/display/forma_mode_toggle.dart';
-export 'components/display/forma_person_chip.dart';
-export 'components/display/forma_timeline.dart';
-export 'components/display/forma_whatsapp_preview.dart';
-export 'components/display/forma_stat_tile.dart';
-export 'components/display/forma_settings_row.dart';
-export 'components/display/forma_role_badge.dart';
-export 'components/display/forma_order_card.dart';
-export 'components/display/forma_proof_icon.dart';
-export 'components/display/forma_chip.dart';
-export 'components/display/forma_status_badge.dart';
-
-// Components — Navigation
-export 'components/navigation/forma_bottom_nav.dart';
-export 'components/navigation/forma_app_header.dart';
-export 'components/navigation/forma_segmented_control.dart';
-
-// Components — Feedback
-export 'components/feedback/forma_alert_banner.dart';
-export 'components/feedback/forma_loading.dart';
-export 'components/feedback/forma_shimmer.dart';
-export 'components/feedback/forma_skeleton.dart';
-export 'components/feedback/forma_push_notification.dart';
-export 'components/feedback/forma_urgency_header.dart';
-
-// Components — Overlay
-export 'components/overlay/forma_bottom_sheet.dart';
-export 'components/overlay/forma_step_indicator.dart';
+// UI primitives — buttons, inputs, cards, navigation, feedback, overlays.
+export 'package:forma_ui/forma_ui.dart';

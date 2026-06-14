@@ -98,35 +98,49 @@ jobs:
           echo "bump=$BUMP" >> $GITHUB_OUTPUT
           echo "range=$RANGE" >> $GITHUB_OUTPUT
 
+      # Published packages, in topological (publish) order. Each consuming
+      # package is published after its internal dependencies so the hosted
+      # versions resolve.
       - name: Bump pubspec versions
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.new_version }}
         run: |
-          NEW_VERSION=${{ steps.version.outputs.new_version }}
-          for f in packages/forma_core/pubspec.yaml packages/forma_theme_plantao_facil/pubspec.yaml packages/forma_theme_dominus/pubspec.yaml; do
+          for f in \
+            packages/forma_foundation/pubspec.yaml \
+            packages/forma_icons/pubspec.yaml \
+            packages/forma_ui/pubspec.yaml \
+            packages/forma_core/pubspec.yaml \
+            packages/forma_theme_plantao_facil/pubspec.yaml \
+            packages/forma_theme_dominus/pubspec.yaml; do
             sed -i -E "s/^version: .*/version: ${NEW_VERSION}/" "$f"
           done
           git diff --stat
 
       - name: Commit version bump
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.new_version }}
         run: |
-          NEW_VERSION=${{ steps.version.outputs.new_version }}
           if git diff --quiet; then
             echo "No version change detected; skipping bump commit."
           else
-            git add packages/forma_core/pubspec.yaml packages/forma_theme_plantao_facil/pubspec.yaml packages/forma_theme_dominus/pubspec.yaml
+            git add packages/*/pubspec.yaml
             git commit -m "chore(release): v${NEW_VERSION} [skip ci]"
             git push origin HEAD:main
           fi
 
       - name: Generate release notes
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.new_version }}
+          RANGE: ${{ steps.version.outputs.range }}
         run: |
-          NEW_VERSION=${{ steps.version.outputs.new_version }}
-          RANGE="${{ steps.version.outputs.range }}"
-
           cat > /tmp/release_notes.md << NOTES
           ## Packages
 
           | Package | Version |
           |---------|---------|
+          | \`forma_foundation\` | v${NEW_VERSION} |
+          | \`forma_icons\` | v${NEW_VERSION} |
+          | \`forma_ui\` | v${NEW_VERSION} |
           | \`forma_core\` | v${NEW_VERSION} |
           | \`forma_theme_plantao_facil\` | v${NEW_VERSION} |
           | \`forma_theme_dominus\` | v${NEW_VERSION} |
@@ -137,90 +151,54 @@ jobs:
           git log $RANGE --pretty=format:"- %s" --no-merges >> /tmp/release_notes.md
 
       - name: Create Git tag & GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_VERSION: ${{ steps.version.outputs.new_version }}
         run: |
-          NEW_VERSION=${{ steps.version.outputs.new_version }}
-
-          git tag "forma_core-v${NEW_VERSION}"
-          git tag "forma_theme_plantao_facil-v${NEW_VERSION}"
-          git tag "forma_theme_dominus-v${NEW_VERSION}"
+          for pkg in forma_foundation forma_icons forma_ui forma_core \
+                     forma_theme_plantao_facil forma_theme_dominus; do
+            git tag "${pkg}-v${NEW_VERSION}"
+          done
           git tag "v${NEW_VERSION}"
           git push --tags
 
           gh release create "v${NEW_VERSION}" \
             --title "v${NEW_VERSION}" \
             --notes-file /tmp/release_notes.md
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configure pub token
         run: dart pub token add https://pub.rodolfodebonis.com.br --env-var PUB_TOKEN
         env:
           PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
 
-      - name: Publish forma_core
-        env:
-          PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
-        run: |
-          cp -r packages/forma_core /tmp/forma_core_publish
-          cd /tmp/forma_core_publish
-          sed -i '/^resolution: workspace$/d' pubspec.yaml
-          dart pub publish --force
-          rm -rf /tmp/forma_core_publish
-
-      - name: Publish forma_theme_plantao_facil
+      - name: Publish packages (topological order)
         env:
           PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
           NEW_VERSION: ${{ steps.version.outputs.new_version }}
+          # Internal packages whose deps must be rewritten to the hosted server.
+          INTERNAL_PKGS: forma_foundation forma_icons forma_ui forma_core
+          PUB_URL: https://pub.rodolfodebonis.com.br
         run: |
-          cp -r packages/forma_theme_plantao_facil /tmp/theme_publish
-          cd /tmp/theme_publish
+          set -euo pipefail
 
-          # Remove workspace resolution
-          sed -i '/^resolution: workspace$/d' pubspec.yaml
+          REWRITE="$(pwd)/scripts/rewrite_pub_deps.py"
 
-          # Point forma_core to hosted private pub
-          python3 -c "
-          import os, re
-          version = os.environ['NEW_VERSION']
-          with open('pubspec.yaml', 'r') as f:
-              content = f.read()
-          content = re.sub(
-              r'  forma_core: \^.*',
-              f'  forma_core:\n    hosted:\n      name: forma_core\n      url: https://pub.rodolfodebonis.com.br\n    version: ^{version}',
-              content
-          )
-          with open('pubspec.yaml', 'w') as f:
-              f.write(content)
-          "
+          publish_pkg() {
+            local pkg="$1"
+            echo "::group::Publishing ${pkg}"
+            rm -rf "/tmp/pub_${pkg}"
+            cp -r "packages/${pkg}" "/tmp/pub_${pkg}"
+            ( cd "/tmp/pub_${pkg}"
+              sed -i '/^resolution: workspace$/d' pubspec.yaml
+              python3 "$REWRITE" pubspec.yaml
+              dart pub publish --dry-run
+              dart pub publish --force
+            )
+            rm -rf "/tmp/pub_${pkg}"
+            echo "::endgroup::"
+          }
 
-          dart pub publish --force
-          rm -rf /tmp/theme_publish
-
-      - name: Publish forma_theme_dominus
-        env:
-          PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
-          NEW_VERSION: ${{ steps.version.outputs.new_version }}
-        run: |
-          cp -r packages/forma_theme_dominus /tmp/dominus_publish
-          cd /tmp/dominus_publish
-
-          # Remove workspace resolution
-          sed -i '/^resolution: workspace$/d' pubspec.yaml
-
-          # Point forma_core to hosted private pub
-          python3 -c "
-          import os, re
-          version = os.environ['NEW_VERSION']
-          with open('pubspec.yaml', 'r') as f:
-              content = f.read()
-          content = re.sub(
-              r'  forma_core: \^.*',
-              f'  forma_core:\n    hosted:\n      name: forma_core\n      url: https://pub.rodolfodebonis.com.br\n    version: ^{version}',
-              content
-          )
-          with open('pubspec.yaml', 'w') as f:
-              f.write(content)
-          "
-
-          dart pub publish --force
-          rm -rf /tmp/dominus_publish
+          for pkg in forma_foundation forma_icons forma_ui forma_core \
+                     forma_theme_plantao_facil forma_theme_dominus; do
+            publish_pkg "$pkg"
+          done

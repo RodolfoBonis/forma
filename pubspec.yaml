@@ -8,11 +8,14 @@ dev_dependencies:
   melos: ^7.5.1
 
 workspace:
+  - packages/forma_foundation
+  - packages/forma_icons
+  - packages/forma_ui
   - packages/forma_core
   - packages/forma_theme_plantao_facil
   - packages/forma_theme_dominus
   - packages/_template
-  - storybook
+  - forma_gallery
 
 melos:
   command:
@@ -48,21 +51,21 @@ melos:
       packageFilters:
         scope: forma_core
 
-    storybook:dev:
-      description: Roda o Storybook no Chrome
+    gallery:dev:
+      description: Roda o forma_gallery (storybook próprio) no Chrome
       run: flutter run -d chrome
       exec:
         concurrency: 1
       packageFilters:
-        scope: forma_storybook
+        scope: forma_gallery
 
-    storybook:build:
-      description: Build do Storybook para deploy web
+    gallery:build:
+      description: Build do forma_gallery para deploy web
       run: flutter build web --release
       exec:
         concurrency: 1
       packageFilters:
-        scope: forma_storybook
+        scope: forma_gallery
 
     ci:
       description: Roda format + analyze + test (usado no CI/CD)

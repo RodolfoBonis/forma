@@ -1,0 +1,100 @@
+import 'package:flutter/material.dart';
+
+import 'package:forma_foundation/forma_foundation.dart';
+
+/// A push notification preview banner following Forma Design System specs.
+///
+/// Resembles an iOS/Android system push notification with app icon,
+/// app name, timestamp, and message body.
+class FormaPushNotification extends StatelessWidget {
+  /// Creates a [FormaPushNotification].
+  const FormaPushNotification({
+    super.key,
+    required this.appName,
+    required this.body,
+    this.appIcon,
+    this.timestamp = 'agora',
+  });
+
+  /// The name of the app displayed in the header.
+  final String appName;
+
+  /// The notification message body.
+  final String body;
+
+  /// Optional app icon widget. Defaults to a colored circle with the
+  /// first letter of [appName].
+  final Widget? appIcon;
+
+  /// Timestamp label displayed next to the app name.
+  final String timestamp;
+
+  @override
+  Widget build(BuildContext context) {
+    final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final typo = context.formaTypography;
+
+    return Container(
+      padding: const EdgeInsets.all(FormaSpacing.md),
+      decoration: BoxDecoration(
+        color: ext.cardBackground,
+        borderRadius: BorderRadius.circular(FormaRadius.cardLg),
+        border: Border.all(color: ext.border, width: 0.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              _buildAppIcon(ext, typo),
+              const SizedBox(width: FormaSpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      appName,
+                      style: typo.body14Medium.copyWith(color: ext.textPrimary),
+                    ),
+                    Text(
+                      timestamp,
+                      style: typo.caption12.copyWith(color: ext.textMuted),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: FormaSpacing.sm),
+          Text(body, style: typo.body13.copyWith(color: ext.textPrimary)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppIcon(FormaThemeExtension ext, FormaTypographyExtension typo) {
+    if (appIcon != null) return SizedBox(width: 44, height: 44, child: appIcon);
+
+    return Container(
+      width: 44,
+      height: 44,
+      decoration: BoxDecoration(
+        color: ext.primaryColor,
+        borderRadius: BorderRadius.circular(FormaRadius.small),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        appName.isNotEmpty ? appName[0].toUpperCase() : '',
+        style: typo.title18.copyWith(color: Colors.white),
+      ),
+    );
+  }
+}

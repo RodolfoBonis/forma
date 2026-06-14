@@ -1,7 +1,8 @@
 name: forma_core
 description: >
-  Forma Design System — shared Flutter components, tokens, and theme architecture
-  for multi-app consistency.
+  Forma Design System — compatibility facade re-exporting forma_foundation and
+  forma_ui, plus transitional app-specific components pending extraction.
+  Prefer depending on forma_foundation / forma_ui / forma_icons directly.
 version: 1.2.0
 publish_to: https://pub.rodolfodebonis.com.br
 resolution: workspace
@@ -13,8 +14,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_svg: ^2.0.17
-  google_fonts: ^6.2.1
+  forma_foundation: ^1.2.0
+  forma_ui: ^1.2.0
 
 dev_dependencies:
   flutter_test:
