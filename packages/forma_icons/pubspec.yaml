@@ -3,7 +3,7 @@ description: >
   Forma Design System — icon layer. Type-safe semantic icon keys backed by
   Material defaults, with a registry so each brand can override any key with
   its own SVG asset.
-version: 1.2.0
+version: 2.0.0
 publish_to: https://pub.rodolfodebonis.com.br
 resolution: workspace
 

@@ -3,7 +3,7 @@ description: >
   Forma Design System — compatibility facade re-exporting forma_foundation and
   forma_ui, plus transitional app-specific components pending extraction.
   Prefer depending on forma_foundation / forma_ui / forma_icons directly.
-version: 1.4.0
+version: 2.0.0
 publish_to: https://pub.rodolfodebonis.com.br
 resolution: workspace
 
