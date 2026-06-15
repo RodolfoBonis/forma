@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'forma_theme_extension.dart';
 import 'forma_typography_extension.dart';
@@ -25,29 +24,57 @@ class FormaTheme {
       brightness: brightness,
     );
 
-    // Fall back to the default text theme when the Google font can't be
-    // resolved (e.g. offline, or in tests with runtime fetching disabled).
-    // Skip the lookup entirely when runtime fetching is off, since
-    // `getTextTheme` schedules unawaited font loads that throw asynchronously.
-    TextTheme? textTheme;
-    if (GoogleFonts.config.allowRuntimeFetching) {
-      try {
-        textTheme = GoogleFonts.getTextTheme(fontFamily);
-      } on Exception {
-        textTheme = null;
-      }
-    }
+    // Build the brand typography scale once: it both feeds the Material
+    // [TextTheme] (so bare `Text` widgets render with DS fonts/sizes/colors)
+    // and is registered as an extension (so components can read named styles).
+    final typography = FormaTypographyExtension.fromFont(fontFamily);
 
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: extension.appBackground,
-      textTheme: textTheme,
-      extensions: <ThemeExtension<dynamic>>[
-        extension,
-        FormaTypographyExtension.fromFont(fontFamily),
-      ],
+      textTheme: _buildTextTheme(typography, extension),
+      extensions: <ThemeExtension<dynamic>>[extension, typography],
+    );
+  }
+
+  /// Maps the Forma typography scale onto Material's [TextTheme] slots and
+  /// paints them with the brand's semantic text colors.
+  ///
+  /// Display and heading slots use [FormaThemeExtension.textPrimary]; muted
+  /// label/overline slots use [FormaThemeExtension.textMuted]. This makes a
+  /// plain `Text` widget render in the right brand color on any background,
+  /// instead of falling back to Material's default (which is tuned for the
+  /// opposite brightness and produces low-contrast text on dark themes).
+  static TextTheme _buildTextTheme(
+    FormaTypographyExtension t,
+    FormaThemeExtension colors,
+  ) {
+    final primary = colors.textPrimary;
+    final muted = colors.textMuted;
+
+    return TextTheme(
+      // Display — hero / large marketing headings.
+      displayLarge: t.displayHero.copyWith(color: primary),
+      displayMedium: t.h1.copyWith(color: primary),
+      displaySmall: t.h2.copyWith(color: primary),
+      // Headline — page and section headings.
+      headlineLarge: t.h2.copyWith(color: primary),
+      headlineMedium: t.h3.copyWith(color: primary),
+      headlineSmall: t.h4.copyWith(color: primary),
+      // Title — card titles, dialog headers, list headers.
+      titleLarge: t.title18.copyWith(color: primary),
+      titleMedium: t.title16.copyWith(color: primary),
+      titleSmall: t.title15.copyWith(color: primary),
+      // Body — primary copy.
+      bodyLarge: t.body16.copyWith(color: primary),
+      bodyMedium: t.body14.copyWith(color: primary),
+      bodySmall: t.body13.copyWith(color: primary),
+      // Label — buttons, captions, overlines (secondary emphasis).
+      labelLarge: t.body14Medium.copyWith(color: primary),
+      labelMedium: t.caption12Med.copyWith(color: muted),
+      labelSmall: t.overline10.copyWith(color: muted),
     );
   }
 }
