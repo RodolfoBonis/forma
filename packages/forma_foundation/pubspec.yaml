@@ -3,7 +3,7 @@ description: >
   Forma Design System — foundation layer: design tokens (spacing, radius,
   typography, durations), the theme engine, and the FormaThemeExtension color
   contract. Brand-agnostic, component-free.
-version: 2.0.0
+version: 2.0.1
 publish_to: https://pub.rodolfodebonis.com.br
 repository: https://github.com/RodolfoBonis/forma
 resolution: workspace
