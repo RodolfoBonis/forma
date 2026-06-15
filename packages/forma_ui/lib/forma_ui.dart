@@ -13,6 +13,7 @@ export 'package:forma_foundation/forma_foundation.dart';
 // Buttons
 export 'src/components/buttons/forma_button.dart';
 export 'src/components/buttons/forma_icon_button.dart';
+export 'src/components/buttons/forma_text_button.dart';
 
 // Inputs
 export 'src/components/inputs/forma_select_chip.dart';

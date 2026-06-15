@@ -2,6 +2,7 @@ import 'package:forma_gallery/forma_gallery.dart';
 
 import 'stories/components/buttons/forma_button.story.dart';
 import 'stories/components/buttons/forma_icon_button.story.dart';
+import 'stories/components/buttons/forma_text_button.story.dart';
 import 'stories/components/display/forma_avatar.story.dart';
 import 'stories/components/display/forma_badge.story.dart';
 import 'stories/components/display/forma_card.story.dart';
@@ -46,7 +47,11 @@ final List<GalleryNode> galleryRoot = [
     children: [
       GalleryFolder(
         'Buttons',
-        children: [formaButtonComponent(), formaIconButtonComponent()],
+        children: [
+          formaButtonComponent(),
+          formaIconButtonComponent(),
+          formaTextButtonComponent(),
+        ],
       ),
       GalleryFolder(
         'Inputs',
