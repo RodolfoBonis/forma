@@ -68,14 +68,25 @@ jobs:
           BRANCH="release/${LABEL}"
 
           git checkout -b "$BRANCH"
+          # melos version runs `git pull --tags -f`, which needs an upstream.
+          # The branch is cut from develop, so track origin/develop (no-op merge
+          # + tag fetch). Set before bootstrap/version; the real push is below.
+          git branch --set-upstream-to=origin/develop "$BRANCH"
           melos bootstrap
 
           # Independent bump of changed packages (+ dependents) and changelogs.
           # Commits the result (no tags — those are created at publish time).
-          OUT="$(melos version --no-git-tag-version --yes 2>&1)" || true
+          set +e
+          OUT="$(melos version --no-git-tag-version --yes 2>&1)"
+          RC=$?
+          set -e
           echo "$OUT"
           if echo "$OUT" | grep -q "No packages were found"; then
             echo "::error::No packages require versioning — nothing to release."
+            exit 1
+          fi
+          if [ "$RC" -ne 0 ]; then
+            echo "::error::melos version failed (exit $RC)."
             exit 1
           fi
 
