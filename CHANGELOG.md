@@ -15,6 +15,34 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`forma_ui` - `v2.1.0`](#forma_ui---v210)
+ - [`forma_core` - `v2.0.2`](#forma_core---v202)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `forma_core` - `v2.0.2`
+
+---
+
+#### `forma_ui` - `v2.1.0`
+
+ - **FEAT**(ui): add FormaTextButton (#17).
+
+
+## 2026-06-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`forma_foundation` - `v2.0.1`](#forma_foundation---v201)
  - [`forma_icons` - `v2.0.1`](#forma_icons---v201)
  - [`forma_ui` - `v2.0.1`](#forma_ui---v201)
