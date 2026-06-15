@@ -57,6 +57,59 @@ void main() {
       expect(typography.body16.fontSize, 16);
       expect(typography.h1.fontWeight, FontWeight.w700);
     });
+
+    test('maps the Forma typography scale onto Material text slots', () {
+      final textTheme = FormaTheme.build(
+        extension: _extension,
+        fontFamily: 'Inter',
+        seedColor: const Color(0xFF9B2242),
+      ).textTheme;
+
+      // Display / heading sizes follow the DS scale.
+      expect(textTheme.displayLarge?.fontSize, 52);
+      expect(textTheme.displayMedium?.fontSize, 34);
+      expect(textTheme.displaySmall?.fontSize, 26);
+      expect(textTheme.headlineMedium?.fontSize, 22);
+      expect(textTheme.headlineSmall?.fontSize, 20);
+      // Title / body / label sizes follow the DS scale.
+      expect(textTheme.titleLarge?.fontSize, 18);
+      expect(textTheme.titleMedium?.fontSize, 16);
+      expect(textTheme.titleSmall?.fontSize, 15);
+      expect(textTheme.bodyLarge?.fontSize, 16);
+      expect(textTheme.bodyMedium?.fontSize, 14);
+      expect(textTheme.bodySmall?.fontSize, 13);
+      expect(textTheme.labelLarge?.fontSize, 14);
+      expect(textTheme.labelMedium?.fontSize, 12);
+      expect(textTheme.labelSmall?.fontSize, 10);
+    });
+
+    test('paints primary text slots with the brand textPrimary color', () {
+      final textTheme = FormaTheme.build(
+        extension: _extension,
+        fontFamily: 'Inter',
+        seedColor: const Color(0xFF9B2242),
+      ).textTheme;
+
+      // A bare `Text` widget resolves to bodyMedium — it must be readable
+      // (textPrimary), not Material's default low-contrast fallback.
+      expect(textTheme.bodyMedium?.color, _extension.textPrimary);
+      expect(textTheme.bodyLarge?.color, _extension.textPrimary);
+      expect(textTheme.displayLarge?.color, _extension.textPrimary);
+      expect(textTheme.headlineMedium?.color, _extension.textPrimary);
+      expect(textTheme.titleLarge?.color, _extension.textPrimary);
+      expect(textTheme.labelLarge?.color, _extension.textPrimary);
+    });
+
+    test('paints muted label slots with the brand textMuted color', () {
+      final textTheme = FormaTheme.build(
+        extension: _extension,
+        fontFamily: 'Inter',
+        seedColor: const Color(0xFF9B2242),
+      ).textTheme;
+
+      expect(textTheme.labelMedium?.color, _extension.textMuted);
+      expect(textTheme.labelSmall?.color, _extension.textMuted);
+    });
   });
 
   group('FormaTypographyExtension', () {
