@@ -3,7 +3,7 @@ description: >
   Forma Design System — icon layer. Type-safe semantic icon keys backed by
   Material defaults, with a registry so each brand can override any key with
   its own SVG asset.
-version: 2.0.1
+version: 2.0.2
 publish_to: https://pub.rodolfodebonis.com.br
 repository: https://github.com/RodolfoBonis/forma
 resolution: workspace
@@ -16,7 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^2.0.17
-  forma_foundation: ^2.0.1
+  forma_foundation: ^2.1.0
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-10-08
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`forma_foundation` - `v2.1.0`](#forma_foundation---v210)
+ - [`forma_theme_spooliq` - `v0.1.1`](#forma_theme_spooliq---v011)
+ - [`forma_ui` - `v2.2.0`](#forma_ui---v220)
+ - [`forma_icons` - `v2.0.2`](#forma_icons---v202)
+ - [`forma_core` - `v2.0.3`](#forma_core---v203)
+ - [`forma_theme_plantao_facil` - `v2.0.2`](#forma_theme_plantao_facil---v202)
+ - [`forma_theme_dominus` - `v2.0.2`](#forma_theme_dominus---v202)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `forma_icons` - `v2.0.2`
+ - `forma_core` - `v2.0.3`
+ - `forma_theme_plantao_facil` - `v2.0.2`
+ - `forma_theme_dominus` - `v2.0.2`
+
+---
+
+#### `forma_foundation` - `v2.1.0`
+
+ - **FEAT**(ui): desktop components, shape extension and SpoolIQ theme (#20).
+
+#### `forma_theme_spooliq` - `v0.1.1`
+
+ - **FEAT**(ui): desktop components, shape extension and SpoolIQ theme (#20).
+
+#### `forma_ui` - `v2.2.0`
+
+ - **FEAT**(ui): desktop components, shape extension and SpoolIQ theme (#20).
+
+
 ## 2026-06-15
 
 ### Changes

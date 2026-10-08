@@ -1,3 +1,7 @@
+## 2.2.0
+
+ - **FEAT**(ui): desktop components, shape extension and SpoolIQ theme (#20).
+
 ## 2.1.0
 
  - **FEAT**(ui): add FormaTextButton (#17).

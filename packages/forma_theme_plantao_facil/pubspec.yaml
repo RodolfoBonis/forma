@@ -1,6 +1,6 @@
 name: forma_theme_plantao_facil
 description: Plantão Fácil theme variant for the Forma Design System.
-version: 2.0.1
+version: 2.0.2
 publish_to: https://pub.rodolfodebonis.com.br
 repository: https://github.com/RodolfoBonis/forma
 resolution: workspace
@@ -12,7 +12,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  forma_foundation: ^2.0.1
+  forma_foundation: ^2.1.0
 
 dev_dependencies:
   flutter_test:

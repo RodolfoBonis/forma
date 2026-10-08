@@ -1,3 +1,7 @@
+## 2.1.0
+
+ - **FEAT**(ui): desktop components, shape extension and SpoolIQ theme (#20).
+
 ## 2.0.1
 
  - **FIX**(foundation): wire brand text colors into Material TextTheme (#13).
