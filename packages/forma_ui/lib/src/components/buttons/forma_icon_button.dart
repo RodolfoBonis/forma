@@ -27,12 +27,13 @@ class FormaIconButton extends StatelessWidget {
   /// Icon size in logical pixels.
   final double size;
 
-  static const double _minTouchTarget = 48;
-
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
     final effectiveColor = color ?? ext.textMuted;
+    // Hit-target size follows the theme's density: 48px on mobile (unchanged),
+    // tighter on compact/desktop themes via FormaShapeExtension.minTouchTarget.
+    final minTouchTarget = context.formaShape.minTouchTarget;
 
     return Semantics(
       button: true,
@@ -42,12 +43,12 @@ class FormaIconButton extends StatelessWidget {
           data: IconThemeData(color: effectiveColor, size: size),
           child: icon,
         ),
-        constraints: const BoxConstraints(
-          minWidth: _minTouchTarget,
-          minHeight: _minTouchTarget,
+        constraints: BoxConstraints(
+          minWidth: minTouchTarget,
+          minHeight: minTouchTarget,
         ),
         padding: EdgeInsets.zero,
-        splashRadius: _minTouchTarget / 2,
+        splashRadius: minTouchTarget / 2,
       ),
     );
   }

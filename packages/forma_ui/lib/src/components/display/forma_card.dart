@@ -70,16 +70,24 @@ class FormaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
+    final shape = context.formaShape;
 
     return switch (variant) {
-      FormaCardVariant.basic => _buildBasic(ext),
+      FormaCardVariant.basic => _buildBasic(ext, shape),
       FormaCardVariant.heroDark => _buildHeroDark(),
       FormaCardVariant.swap => _buildSwap(ext),
       FormaCardVariant.shift => _buildShift(ext),
     };
   }
 
-  Widget _buildBasic(FormaThemeExtension ext) {
+  Widget _buildBasic(FormaThemeExtension ext, FormaShapeExtension shape) {
+    // The basic card historically used FormaRadius.cardLg (20). Mobile themes
+    // keep that exact radius; denser (desktop) themes tighten it via
+    // FormaShapeExtension.cardRadius.
+    final radius = shape.cardRadius == FormaShapeExtension.mobile.cardRadius
+        ? FormaRadius.cardLg
+        : shape.cardRadius;
+
     return Container(
       width: width,
       height: height,
@@ -91,9 +99,7 @@ class FormaCard extends StatelessWidget {
           ),
       decoration: BoxDecoration(
         color: backgroundColor ?? ext.cardBackground,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(FormaRadius.cardLg),
-        ),
+        borderRadius: BorderRadius.all(Radius.circular(radius)),
         border: Border.all(color: ext.border, width: 0.5),
       ),
       child: child,
