@@ -38,7 +38,7 @@ env:
 jobs:
   setup:
     name: Resolve release branch
-    runs-on: ubuntu-latest
+    runs-on: arc-forma
     outputs:
       branch: ${{ steps.r.outputs.branch }}
     steps:
@@ -64,7 +64,7 @@ jobs:
   ci:
     name: CI gate
     needs: setup
-    runs-on: ubuntu-latest
+    runs-on: arc-forma
     steps:
       - uses: actions/checkout@v4
         with:
@@ -86,7 +86,7 @@ jobs:
   publish:
     name: Publish packages
     needs: [setup, ci]
-    runs-on: ubuntu-latest
+    runs-on: arc-forma
     steps:
       - uses: actions/checkout@v4
         with:
@@ -236,7 +236,7 @@ jobs:
     name: Promote to main & develop
     needs: [setup, publish]
     if: ${{ !inputs.pre_release && !inputs.dry_run }}
-    runs-on: ubuntu-latest
+    runs-on: arc-forma
     steps:
       - uses: actions/checkout@v4
         with:

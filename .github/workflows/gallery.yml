@@ -21,7 +21,7 @@ jobs:
     name: Build & Deploy Gallery
     # Skip release-candidate (prerelease) umbrella releases — deploy finals only.
     if: ${{ github.event_name == 'workflow_dispatch' || !github.event.release.prerelease }}
-    runs-on: ubuntu-latest
+    runs-on: arc-forma
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

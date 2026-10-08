@@ -13,7 +13,7 @@ concurrency:
 jobs:
   ci:
     name: Format, Analyze & Test
-    runs-on: ubuntu-latest
+    runs-on: arc-forma
     steps:
       - uses: actions/checkout@v4
 
