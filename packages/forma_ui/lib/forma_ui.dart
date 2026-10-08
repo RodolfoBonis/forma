@@ -47,3 +47,29 @@ export 'src/components/feedback/forma_skeleton.dart';
 // Overlay
 export 'src/components/overlay/forma_bottom_sheet.dart';
 export 'src/components/overlay/forma_step_indicator.dart';
+
+// Desktop — navigation, overlays & feedback
+export 'src/components/display/forma_kbd.dart';
+export 'src/components/feedback/forma_empty_state.dart';
+export 'src/components/feedback/forma_toast.dart';
+export 'src/components/navigation/forma_sidebar.dart';
+export 'src/components/navigation/forma_tabs.dart';
+export 'src/components/navigation/forma_top_bar.dart';
+export 'src/components/overlay/forma_command_palette.dart';
+export 'src/components/overlay/forma_dialog.dart';
+export 'src/components/overlay/forma_menu_button.dart';
+export 'src/components/overlay/forma_side_sheet.dart';
+
+// (end desktop navigation)
+
+// Desktop — data & inputs
+export 'src/components/display/forma_data_table.dart';
+export 'src/components/display/forma_kanban_board.dart';
+export 'src/components/inputs/forma_checkbox.dart';
+export 'src/components/inputs/forma_combobox.dart';
+export 'src/components/inputs/forma_date_field.dart';
+export 'src/components/inputs/forma_number_field.dart';
+export 'src/components/inputs/forma_select.dart';
+export 'src/components/navigation/forma_pagination.dart';
+
+// (end desktop data)

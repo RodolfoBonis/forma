@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'forma_shape_extension.dart';
 import 'forma_theme_extension.dart';
 import 'forma_typography_extension.dart';
 
@@ -13,11 +14,15 @@ class FormaTheme {
   ///
   /// Pass [brightness] to produce a dark theme (defaults to
   /// [Brightness.light] to preserve existing light-only themes).
+  ///
+  /// Pass [shape] to tune radii and control sizes (e.g.
+  /// [FormaShapeExtension.desktop]); defaults to [FormaShapeExtension.mobile].
   static ThemeData build({
     required FormaThemeExtension extension,
     required String fontFamily,
     required Color seedColor,
     Brightness brightness = Brightness.light,
+    FormaShapeExtension shape = FormaShapeExtension.mobile,
   }) {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: seedColor,
@@ -33,9 +38,10 @@ class FormaTheme {
       useMaterial3: true,
       brightness: brightness,
       colorScheme: colorScheme,
+      visualDensity: shape.visualDensity,
       scaffoldBackgroundColor: extension.appBackground,
       textTheme: _buildTextTheme(typography, extension),
-      extensions: <ThemeExtension<dynamic>>[extension, typography],
+      extensions: <ThemeExtension<dynamic>>[extension, typography, shape],
     );
   }
 

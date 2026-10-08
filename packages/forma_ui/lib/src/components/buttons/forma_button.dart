@@ -33,6 +33,7 @@ class FormaButton extends StatelessWidget {
     this.width,
     this.icon,
     this.variant = FormaButtonVariant.primary,
+    this.small = false,
     super.key,
   });
 
@@ -43,6 +44,7 @@ class FormaButton extends StatelessWidget {
     this.isLoading = false,
     this.width,
     this.icon,
+    this.small = false,
     super.key,
   }) : variant = FormaButtonVariant.primary;
 
@@ -53,6 +55,7 @@ class FormaButton extends StatelessWidget {
     this.isLoading = false,
     this.width,
     this.icon,
+    this.small = false,
     super.key,
   }) : variant = FormaButtonVariant.secondary;
 
@@ -63,6 +66,7 @@ class FormaButton extends StatelessWidget {
     this.isLoading = false,
     this.width,
     this.icon,
+    this.small = false,
     super.key,
   }) : variant = FormaButtonVariant.danger;
 
@@ -73,6 +77,7 @@ class FormaButton extends StatelessWidget {
     this.isLoading = false,
     this.width,
     this.icon,
+    this.small = false,
     super.key,
   }) : variant = FormaButtonVariant.ghost;
 
@@ -86,8 +91,14 @@ class FormaButton extends StatelessWidget {
   /// When true, shows a spinner and hides the label.
   final bool isLoading;
 
-  /// Fixed width. When null the button stretches to fill available width.
+  /// Fixed width. When null the button stretches to fill available width
+  /// if the theme's [FormaShapeExtension.expandButtons] is true, otherwise it
+  /// sizes to its content.
   final double? width;
+
+  /// Uses [FormaShapeExtension.buttonHeightSmall] instead of the regular
+  /// height.
+  final bool small;
 
   /// Optional leading icon displayed before the label.
   final Widget? icon;
@@ -95,13 +106,14 @@ class FormaButton extends StatelessWidget {
   /// Visual style of the button.
   final FormaButtonVariant variant;
 
-  static const double _height = 56;
-  static const double _minTouchTarget = 48;
-
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
     final typo = context.formaTypography;
+    final shape = context.formaShape;
+    final height = small ? shape.buttonHeightSmall : shape.buttonHeight;
+    final effectiveWidth =
+        width ?? (shape.expandButtons ? double.infinity : null);
     final colors = _resolveColors(ext);
     final isDisabled = variant == FormaButtonVariant.disabled;
     final effectiveOnPressed = isDisabled || isLoading ? null : onPressed;
@@ -109,15 +121,25 @@ class FormaButton extends StatelessWidget {
     final buttonStyle = ButtonStyle(
       backgroundColor: WidgetStatePropertyAll<Color>(colors.background),
       foregroundColor: WidgetStatePropertyAll<Color>(colors.foreground),
-      minimumSize: const WidgetStatePropertyAll<Size>(
-        Size(_minTouchTarget, _height),
+      overlayColor: WidgetStateProperty.resolveWith<Color?>((states) {
+        if (states.contains(WidgetState.pressed)) {
+          return colors.foreground.withValues(alpha: 0.12);
+        }
+        if (states.contains(WidgetState.hovered) ||
+            states.contains(WidgetState.focused)) {
+          return colors.foreground.withValues(alpha: 0.08);
+        }
+        return null;
+      }),
+      minimumSize: WidgetStatePropertyAll<Size>(
+        Size(shape.minTouchTarget, height),
       ),
-      fixedSize: WidgetStatePropertyAll<Size>(
-        Size(width ?? double.infinity, _height),
-      ),
-      shape: const WidgetStatePropertyAll<OutlinedBorder>(
+      fixedSize: effectiveWidth == null
+          ? WidgetStatePropertyAll<Size>(Size.fromHeight(height))
+          : WidgetStatePropertyAll<Size>(Size(effectiveWidth, height)),
+      shape: WidgetStatePropertyAll<OutlinedBorder>(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(FormaRadius.button)),
+          borderRadius: BorderRadius.all(Radius.circular(shape.buttonRadius)),
         ),
       ),
       side: colors.borderColor != null
@@ -140,7 +162,7 @@ class FormaButton extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(colors.foreground),
             ),
           )
-        : _buildLabel(colors.foreground, typo);
+        : _buildLabel(colors.foreground, typo, compact: !shape.expandButtons);
 
     return Semantics(
       button: true,
@@ -154,8 +176,14 @@ class FormaButton extends StatelessWidget {
     );
   }
 
-  Widget _buildLabel(Color foreground, FormaTypographyExtension typo) {
-    final textStyle = typo.title15.copyWith(color: foreground);
+  Widget _buildLabel(
+    Color foreground,
+    FormaTypographyExtension typo, {
+    required bool compact,
+  }) {
+    final textStyle = (compact ? typo.body14Medium : typo.title15).copyWith(
+      color: foreground,
+    );
 
     if (icon == null) {
       return Text(label, style: textStyle);

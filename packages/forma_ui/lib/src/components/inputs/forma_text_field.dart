@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:forma_foundation/forma_foundation.dart';
 
@@ -21,6 +22,17 @@ class FormaTextField extends StatelessWidget {
     this.obscureText = false,
     this.maxLines = 1,
     this.textCapitalization = TextCapitalization.none,
+    this.onChanged,
+    this.onSubmitted,
+    this.focusNode,
+    this.autofocus = false,
+    this.readOnly = false,
+    this.onTap,
+    this.inputFormatters,
+    this.textInputAction,
+    this.autofillHints,
+    this.helperText,
+    this.minLines,
     super.key,
   });
 
@@ -57,43 +69,109 @@ class FormaTextField extends StatelessWidget {
   /// Text capitalization behavior.
   final TextCapitalization textCapitalization;
 
-  static const double _minHeight = 56;
+  /// Called on every edit.
+  final ValueChanged<String>? onChanged;
+
+  /// Called when the user submits (e.g. presses Enter).
+  final ValueChanged<String>? onSubmitted;
+
+  /// Optional focus node.
+  final FocusNode? focusNode;
+
+  /// Whether the field grabs focus when first built.
+  final bool autofocus;
+
+  /// Whether the text can be edited (the field stays focusable).
+  final bool readOnly;
+
+  /// Called when the field is tapped.
+  final VoidCallback? onTap;
+
+  /// Input formatters (masks, digit filters…).
+  final List<TextInputFormatter>? inputFormatters;
+
+  /// Keyboard action button.
+  final TextInputAction? textInputAction;
+
+  /// Autofill hints (email, password…).
+  final Iterable<String>? autofillHints;
+
+  /// Helper text displayed below the input.
+  final String? helperText;
+
+  /// Minimum number of visible lines.
+  final int? minLines;
 
   @override
   Widget build(BuildContext context) {
     final ext = Theme.of(context).extension<FormaThemeExtension>()!;
     final typo = context.formaTypography;
+    final shape = context.formaShape;
+    final compact = !shape.expandButtons;
+    final textStyle = compact ? typo.body14 : typo.body16;
 
     final decoration = InputDecoration(
       hintText: hint,
-      hintStyle: typo.body16.copyWith(color: ext.textHint),
+      hintStyle: textStyle.copyWith(color: ext.textHint),
       prefixIcon: prefix,
       suffixIcon: suffix,
       enabled: enabled,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: FormaSpacing.base,
-        vertical: FormaSpacing.md,
+      isDense: compact,
+      filled: compact,
+      fillColor: ext.cardBackground,
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: compact ? FormaSpacing.md : FormaSpacing.base,
+        vertical: compact ? 10 : FormaSpacing.md,
       ),
-      constraints: const BoxConstraints(minHeight: _minHeight),
-      border: _buildBorder(ext.border, 0.5),
-      enabledBorder: _buildBorder(ext.border, 0.5),
-      focusedBorder: _buildBorder(ext.primaryColor, 2),
-      errorBorder: _buildBorder(ext.errorColor, 2),
-      focusedErrorBorder: _buildBorder(ext.errorColor, 2),
-      disabledBorder: _buildBorder(ext.border, 0.5),
+      constraints: BoxConstraints(minHeight: shape.inputHeight),
+      border: _buildBorder(ext.border, compact ? 1 : 0.5, shape.inputRadius),
+      enabledBorder: _buildBorder(
+        ext.border,
+        compact ? 1 : 0.5,
+        shape.inputRadius,
+      ),
+      focusedBorder: _buildBorder(
+        ext.primaryColor,
+        compact ? 1.5 : 2,
+        shape.inputRadius,
+      ),
+      errorBorder: _buildBorder(
+        ext.errorColor,
+        compact ? 1.5 : 2,
+        shape.inputRadius,
+      ),
+      focusedErrorBorder: _buildBorder(
+        ext.errorColor,
+        compact ? 1.5 : 2,
+        shape.inputRadius,
+      ),
+      disabledBorder: _buildBorder(ext.border, 0.5, shape.inputRadius),
       errorStyle: typo.caption12.copyWith(color: ext.errorColor),
+      helperText: helperText,
+      helperStyle: typo.caption12.copyWith(color: ext.textMuted),
     );
 
     final field = TextFormField(
       controller: controller,
       validator: validator,
       decoration: decoration,
-      style: typo.body16.copyWith(color: ext.textPrimary),
+      style: textStyle.copyWith(color: ext.textPrimary),
       keyboardType: keyboardType,
       obscureText: obscureText,
       maxLines: maxLines,
       enabled: enabled,
       textCapitalization: textCapitalization,
+      onChanged: onChanged,
+      onFieldSubmitted: onSubmitted,
+      focusNode: focusNode,
+      autofocus: autofocus,
+      readOnly: readOnly,
+      onTap: onTap,
+      inputFormatters: inputFormatters,
+      textInputAction: textInputAction,
+      autofillHints: autofillHints,
+      minLines: minLines,
+      cursorColor: ext.primaryColor,
     );
 
     if (label == null) return field;
@@ -102,19 +180,25 @@ class FormaTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          label!.toUpperCase(),
-          style: typo.overline10.copyWith(color: ext.textMuted),
-        ),
-        const SizedBox(height: FormaSpacing.xs),
+        if (compact)
+          Text(
+            label!,
+            style: typo.caption12Med.copyWith(color: ext.textPrimary),
+          )
+        else
+          Text(
+            label!.toUpperCase(),
+            style: typo.overline10.copyWith(color: ext.textMuted),
+          ),
+        SizedBox(height: compact ? 6 : FormaSpacing.xs),
         field,
       ],
     );
   }
 
-  OutlineInputBorder _buildBorder(Color color, double width) {
+  OutlineInputBorder _buildBorder(Color color, double width, double radius) {
     return OutlineInputBorder(
-      borderRadius: const BorderRadius.all(Radius.circular(FormaRadius.input)),
+      borderRadius: BorderRadius.all(Radius.circular(radius)),
       borderSide: BorderSide(color: color, width: width),
     );
   }

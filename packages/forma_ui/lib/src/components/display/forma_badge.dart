@@ -60,13 +60,17 @@ class FormaBadge extends StatelessWidget {
           color: colors.background,
           borderRadius: const BorderRadius.all(Radius.circular(_borderRadius)),
         ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          style: TextStyle(
-            color: colors.foreground,
-            fontSize: _fontSize,
-            fontWeight: FontWeight.w600,
+        // widthFactor 1: o badge abraça o texto em vez de ocupar a largura
+        // disponível (ex.: dentro de Wrap/Column stretch).
+        child: Center(
+          widthFactor: 1,
+          child: Text(
+            label,
+            style: TextStyle(
+              color: colors.foreground,
+              fontSize: _fontSize,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
