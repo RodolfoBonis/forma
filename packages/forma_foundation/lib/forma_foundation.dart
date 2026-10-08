@@ -13,6 +13,7 @@ export 'src/tokens/forma_typography.dart';
 
 // Theme
 export 'src/theme/forma_theme.dart';
+export 'src/theme/forma_shape_extension.dart';
 export 'src/theme/forma_theme_extension.dart';
 export 'src/theme/forma_typography_extension.dart';
 
