@@ -33,7 +33,7 @@ env:
   PUB_URL: https://pub.rodolfodebonis.com.br
   INTERNAL_PKGS: forma_foundation forma_icons forma_ui forma_core
   # Published packages, in topological (publish) order.
-  PUBLISH_ORDER: forma_foundation forma_icons forma_ui forma_core forma_theme_plantao_facil forma_theme_dominus
+  PUBLISH_ORDER: forma_foundation forma_icons forma_ui forma_core forma_theme_plantao_facil forma_theme_dominus forma_theme_spooliq
 
 jobs:
   setup:
