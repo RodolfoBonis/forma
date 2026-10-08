@@ -50,3 +50,18 @@ Widget wrapForTest(Widget child) {
     home: Scaffold(body: Center(child: child)),
   );
 }
+
+/// Like [wrapForTest] but also registers [FormaShapeExtension.desktop] so
+/// components render in their compact, pointer-first desktop form.
+Widget wrapForTestDesktop(Widget child) {
+  return MaterialApp(
+    theme: ThemeData(
+      extensions: <ThemeExtension<dynamic>>[
+        testExtension,
+        FormaTypographyExtension.fromFont('Inter'),
+        FormaShapeExtension.desktop,
+      ],
+    ),
+    home: Scaffold(body: Center(child: child)),
+  );
+}

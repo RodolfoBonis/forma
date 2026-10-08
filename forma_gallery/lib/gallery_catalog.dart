@@ -3,6 +3,24 @@ import 'package:forma_gallery/forma_gallery.dart';
 import 'stories/components/buttons/forma_button.story.dart';
 import 'stories/components/buttons/forma_icon_button.story.dart';
 import 'stories/components/buttons/forma_text_button.story.dart';
+import 'stories/components/desktop/forma_checkbox.story.dart';
+import 'stories/components/desktop/forma_combobox.story.dart';
+import 'stories/components/desktop/forma_command_palette.story.dart';
+import 'stories/components/desktop/forma_data_table.story.dart';
+import 'stories/components/desktop/forma_date_field.story.dart';
+import 'stories/components/desktop/forma_dialog.story.dart';
+import 'stories/components/desktop/forma_empty_state.story.dart';
+import 'stories/components/desktop/forma_kanban_board.story.dart';
+import 'stories/components/desktop/forma_kbd.story.dart';
+import 'stories/components/desktop/forma_menu_button.story.dart';
+import 'stories/components/desktop/forma_number_field.story.dart';
+import 'stories/components/desktop/forma_pagination.story.dart';
+import 'stories/components/desktop/forma_select.story.dart';
+import 'stories/components/desktop/forma_side_sheet.story.dart';
+import 'stories/components/desktop/forma_sidebar.story.dart';
+import 'stories/components/desktop/forma_tabs.story.dart';
+import 'stories/components/desktop/forma_toast.story.dart';
+import 'stories/components/desktop/forma_top_bar.story.dart';
 import 'stories/components/display/forma_avatar.story.dart';
 import 'stories/components/display/forma_badge.story.dart';
 import 'stories/components/display/forma_card.story.dart';
@@ -95,6 +113,41 @@ final List<GalleryNode> galleryRoot = [
       GalleryFolder(
         'Overlay',
         children: [formaBottomSheetComponent(), formaStepIndicatorComponent()],
+      ),
+    ],
+  ),
+  GalleryFolder(
+    'Desktop',
+    children: [
+      GalleryFolder(
+        'Navigation & Overlays',
+        children: [
+          formaSidebarComponent(),
+          formaTopBarComponent(),
+          formaTabsComponent(),
+          formaDialogComponent(),
+          formaSideSheetComponent(),
+          formaCommandPaletteComponent(),
+          formaMenuButtonComponent(),
+          formaToastComponent(),
+          formaEmptyStateComponent(),
+          formaKbdComponent(),
+          // (desktop navigation stories)
+        ],
+      ),
+      GalleryFolder(
+        'Data & Inputs',
+        children: [
+          formaDataTableComponent(),
+          formaKanbanBoardComponent(),
+          formaSelectComponent(),
+          formaComboboxComponent(),
+          formaCheckboxComponent(),
+          formaDateFieldComponent(),
+          formaNumberFieldComponent(),
+          formaPaginationComponent(),
+          // (desktop data stories)
+        ],
       ),
     ],
   ),
