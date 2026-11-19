@@ -1,3 +1,9 @@
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(theme_dominus): build `ThemeData` from `package:material_ui/material_ui.dart` for Flutter 3.50. Updated `forma_foundation` to `^3.0.0`.
+
 ## 2.0.2
 
  - Update a dependency to the latest release.

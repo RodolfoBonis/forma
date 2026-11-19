@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'package:forma_foundation/forma_foundation.dart';
+
 import 'forma_shimmer.dart';
 
 /// Pre-built skeleton placeholder shapes with shimmer animation.

@@ -1,3 +1,9 @@
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(ui): migrate all components to `package:material_ui/material_ui.dart` for Flutter 3.50. Material types exposed by the public API now come from `material_ui`.
+
 ## 2.2.0
 
  - **FEAT**(ui): desktop components, shape extension and SpoolIQ theme (#20).

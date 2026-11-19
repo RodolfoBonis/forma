@@ -2,7 +2,7 @@ name: forma
 publish_to: none
 
 environment:
-  sdk: '>=3.11.0 <4.0.0'
+  sdk: '>=3.14.0 <4.0.0'
 
 dev_dependencies:
   melos: ^7.5.1

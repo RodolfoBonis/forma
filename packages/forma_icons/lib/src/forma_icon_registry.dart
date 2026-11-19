@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'forma_icon_data.dart';
 import 'forma_icon_key.dart';

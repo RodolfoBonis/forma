@@ -3,20 +3,21 @@ description: >
   Forma Design System — brand-agnostic UI primitives (buttons, inputs, cards,
   navigation, feedback, overlays). Consumes design tokens and the theme
   contract from forma_foundation and icons from forma_icons.
-version: 2.2.0
+version: 3.0.0
 publish_to: https://pub.rodolfodebonis.com.br
 repository: https://github.com/RodolfoBonis/forma
 resolution: workspace
 
 environment:
-  sdk: '>=3.11.0 <4.0.0'
-  flutter: '>=3.41.0'
+  sdk: '>=3.14.0 <4.0.0'
+  flutter: '>=3.50.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  forma_foundation: ^2.1.0
-  forma_icons: ^2.0.2
+  material_ui: ^1.8.0
+  forma_foundation: ^3.0.0
+  forma_icons: ^3.0.0
 
 dev_dependencies:
   flutter_test:

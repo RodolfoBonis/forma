@@ -3,20 +3,20 @@ description: >
   Forma Design System — compatibility facade re-exporting forma_foundation and
   forma_ui, plus transitional app-specific components pending extraction.
   Prefer depending on forma_foundation / forma_ui / forma_icons directly.
-version: 2.0.3
+version: 3.0.0
 publish_to: https://pub.rodolfodebonis.com.br
 repository: https://github.com/RodolfoBonis/forma
 resolution: workspace
 
 environment:
-  sdk: '>=3.11.0 <4.0.0'
-  flutter: '>=3.41.0'
+  sdk: '>=3.14.0 <4.0.0'
+  flutter: '>=3.50.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  forma_foundation: ^2.1.0
-  forma_ui: ^2.2.0
+  forma_foundation: ^3.0.0
+  forma_ui: ^3.0.0
 
 dev_dependencies:
   flutter_test:

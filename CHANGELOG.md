@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-11-18
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`forma_foundation` - `v3.0.0`](#forma_foundation---v300)
+ - [`forma_icons` - `v3.0.0`](#forma_icons---v300)
+ - [`forma_ui` - `v3.0.0`](#forma_ui---v300)
+ - [`forma_core` - `v3.0.0`](#forma_core---v300)
+ - [`forma_theme_dominus` - `v3.0.0`](#forma_theme_dominus---v300)
+ - [`forma_theme_plantao_facil` - `v3.0.0`](#forma_theme_plantao_facil---v300)
+ - [`forma_theme_spooliq` - `v0.2.0`](#forma_theme_spooliq---v020)
+
+Packages with other changes:
+
+ - There are no other changes in this release.
+
+---
+
+#### `forma_foundation` - `v3.0.0`
+
+ - **BREAKING** **FEAT**(foundation): migrate the theme engine to `package:material_ui/material_ui.dart` for Flutter 3.50. `ThemeData`, `ThemeExtension`, `ColorScheme` and related Material types are now sourced from `material_ui` instead of the SDK-deprecated `package:flutter/material.dart`.
+
+#### `forma_icons` - `v3.0.0`
+
+ - **BREAKING** **FEAT**(icons): source `IconData`/`Icons` defaults from `package:material_ui/material_ui.dart` for Flutter 3.50.
+
+#### `forma_ui` - `v3.0.0`
+
+ - **BREAKING** **FEAT**(ui): migrate all components to `package:material_ui/material_ui.dart` for Flutter 3.50.
+
+#### `forma_core` - `v3.0.0`
+
+ - **BREAKING** **FEAT**(core): re-exported Material types now come from `package:material_ui/material_ui.dart` (via forma_foundation/forma_ui) for Flutter 3.50.
+
+#### `forma_theme_dominus` - `v3.0.0`
+
+ - **BREAKING** **FEAT**(theme_dominus): build `ThemeData` from `package:material_ui/material_ui.dart` for Flutter 3.50.
+
+#### `forma_theme_plantao_facil` - `v3.0.0`
+
+ - **BREAKING** **FEAT**(theme_plantao_facil): build `ThemeData` from `package:material_ui/material_ui.dart` for Flutter 3.50.
+
+#### `forma_theme_spooliq` - `v0.2.0`
+
+ - **BREAKING** **FEAT**(theme_spooliq): build `ThemeData` from `package:material_ui/material_ui.dart` for Flutter 3.50.
+
+
 ## 2026-10-08
 
 ### Changes

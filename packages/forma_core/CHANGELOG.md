@@ -1,3 +1,9 @@
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(core): Material types re-exported via `forma_foundation`/`forma_ui` now come from `package:material_ui/material_ui.dart` (Flutter 3.50). Updated `forma_foundation` and `forma_ui` to `^3.0.0`.
+
 ## 2.0.3
 
  - Update a dependency to the latest release.

@@ -3,18 +3,19 @@ description: >
   Forma Design System — foundation layer: design tokens (spacing, radius,
   typography, durations), the theme engine, and the FormaThemeExtension color
   contract. Brand-agnostic, component-free.
-version: 2.1.0
+version: 3.0.0
 publish_to: https://pub.rodolfodebonis.com.br
 repository: https://github.com/RodolfoBonis/forma
 resolution: workspace
 
 environment:
-  sdk: '>=3.11.0 <4.0.0'
-  flutter: '>=3.41.0'
+  sdk: '>=3.14.0 <4.0.0'
+  flutter: '>=3.50.0'
 
 dependencies:
   flutter:
     sdk: flutter
+  material_ui: ^1.8.0
   google_fonts: ^6.2.1
 
 dev_dependencies:

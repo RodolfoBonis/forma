@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'forma_shape_extension.dart';
 import 'forma_theme_extension.dart';

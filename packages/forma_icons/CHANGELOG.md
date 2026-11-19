@@ -1,3 +1,9 @@
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(icons): source `IconData`/`Icons` defaults from `package:material_ui/material_ui.dart` for Flutter 3.50 instead of the SDK-deprecated `package:flutter/material.dart`.
+
 ## 2.0.2
 
  - Update a dependency to the latest release.
