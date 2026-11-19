@@ -248,8 +248,8 @@ This scaffolds a new package under `packages/forma_theme_mybrand/` with color to
 
 ### Prerequisites
 
-- Flutter >= 3.41.0
-- Dart >= 3.11.0
+- Flutter >= 3.50
+- Dart >= 3.14
 - Melos (`dart pub global activate melos`)
 
 ### Setup

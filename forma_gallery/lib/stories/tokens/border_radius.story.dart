@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:forma_core/forma_core.dart';
 import 'package:forma_gallery/forma_gallery.dart';
 
@@ -57,9 +57,8 @@ class _BorderRadiusScale extends StatelessWidget {
               width: 120,
               height: 56,
               decoration: BoxDecoration(
-                color: Theme.of(
-                  context,
-                ).colorScheme.primary.withValues(alpha: 0.15),
+                color: Theme.of(context).colorScheme.primary
+                    .withValues(alpha: 0.15),
                 border: Border.all(
                   color: Theme.of(context).colorScheme.primary,
                   width: 2,

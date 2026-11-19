@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:forma_gallery/forma_gallery.dart';
 
 import 'gallery_catalog.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:forma_core/forma_core.dart';
 import 'package:forma_gallery/forma_gallery.dart';
 import 'package:forma_theme_dominus/forma_theme_dominus.dart';
