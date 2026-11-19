@@ -31,7 +31,7 @@ Packages with other changes:
 
 #### `forma_icons` - `v3.0.0`
 
- - **BREAKING** **FEAT**(icons): source `IconData`/`Icons` defaults from `package:material_ui/material_ui.dart` for Flutter 3.50.
+ - **BREAKING** **FEAT**(icons): source `Icons` and the default glyphs from `package:material_ui/material_ui.dart` for Flutter 3.50. `IconData` continues to come from `package:flutter/widgets.dart`.
 
 #### `forma_ui` - `v3.0.0`
 
